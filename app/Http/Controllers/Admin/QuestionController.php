@@ -19,7 +19,10 @@ class QuestionController extends Controller
             $questions = Question::where('tryout_id', $tryout_id)->get();
         }
 
-        return view('admin.soal', compact('questions', 'tryouts', 'tryout_id'));
+        $bankSoals = \App\Models\BankSoal::with('kategori')->latest()->get();
+        $kategoris = \App\Models\KategoriBankSoal::all();
+
+        return view('admin.soal', compact('questions', 'tryouts', 'tryout_id', 'bankSoals', 'kategoris'));
     }
 
     // CREATE
@@ -33,9 +36,41 @@ class QuestionController extends Controller
         ]);
     }
 
-    // STORE
     public function store(Request $request)
     {
+        // =========================
+        // MODE SELEKSI DARI BANK SOAL
+        // =========================
+        if ($request->has('bank_soal_ids')) {
+            $request->validate([
+                'tryout_id' => 'required|exists:tryouts,id',
+                'bank_soal_ids' => 'required|array|min:1',
+                'bank_soal_ids.*' => 'exists:bank_soals,id',
+            ]);
+
+            $inserted = 0;
+            foreach ($request->bank_soal_ids as $id) {
+                $soal = \App\Models\BankSoal::find($id);
+                if ($soal) {
+                    Question::create([
+                        'tryout_id' => $request->tryout_id,
+                        'question_text' => $soal->pertanyaan,
+                        'option_a' => $soal->opsi_a,
+                        'option_b' => $soal->opsi_b,
+                        'option_c' => $soal->opsi_c,
+                        'option_d' => $soal->opsi_d,
+                        'option_e' => $soal->opsi_e,
+                        'correct_answer' => strtoupper($soal->jawaban_benar)
+                    ]);
+                    $inserted++;
+                }
+            }
+
+            return redirect()
+                ->route('admin.soal.index', ['tryout_id' => $request->tryout_id])
+                ->with('success', "Berhasil menambahkan $inserted soal dari Bank Soal!");
+        }
+
         // =========================
         // MODE MULTI INPUT
         // =========================
@@ -59,6 +94,7 @@ class QuestionController extends Controller
                     'option_b' => $q['option_b'],
                     'option_c' => $q['option_c'],
                     'option_d' => $q['option_d'],
+                    'option_e' => isset($q['option_e']) ? $q['option_e'] : null,
                     'correct_answer' => $q['correct_answer'],
                 ]);
             }
@@ -78,7 +114,8 @@ class QuestionController extends Controller
             'option_b' => 'required',
             'option_c' => 'required',
             'option_d' => 'required',
-            'correct_answer' => 'required|in:A,B,C,D',
+            'option_e' => 'nullable',
+            'correct_answer' => 'required|in:A,B,C,D,E',
         ]);
 
         Question::create([
@@ -88,6 +125,7 @@ class QuestionController extends Controller
             'option_b' => $request->option_b,
             'option_c' => $request->option_c,
             'option_d' => $request->option_d,
+            'option_e' => $request->option_e,
             'correct_answer' => $request->correct_answer,
         ]);
 
@@ -119,7 +157,8 @@ class QuestionController extends Controller
             'option_b' => 'required',
             'option_c' => 'required',
             'option_d' => 'required',
-            'correct_answer' => 'required|in:A,B,C,D',
+            'option_e' => 'nullable',
+            'correct_answer' => 'required|in:A,B,C,D,E',
         ]);
 
         $question->update([
@@ -128,6 +167,7 @@ class QuestionController extends Controller
             'option_b' => $request->option_b,
             'option_c' => $request->option_c,
             'option_d' => $request->option_d,
+            'option_e' => $request->option_e,
             'correct_answer' => $request->correct_answer,
         ]);
 
@@ -147,5 +187,17 @@ class QuestionController extends Controller
         return redirect()
             ->route('admin.soal.index', ['tryout_id' => $tryout_id])
             ->with('success', 'Soal berhasil dihapus');
+    }
+
+    // EXPORT PDF
+    public function exportPdf($tryout_id)
+    {
+        $tryout = Tryout::findOrFail($tryout_id);
+        $questions = Question::where('tryout_id', $tryout_id)->get();
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.soal_pdf', compact('tryout', 'questions'));
+        
+        $filename = 'soal-tryout-' . \Illuminate\Support\Str::slug($tryout->title) . '.pdf';
+        return $pdf->download($filename);
     }
 }

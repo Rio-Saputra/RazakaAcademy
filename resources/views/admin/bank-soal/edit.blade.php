@@ -50,6 +50,13 @@
                     <input type="text" name="opsi_d" class="form-control" style="border-radius: 0 12px 12px 0;" required value="{{ old('opsi_d', $bankSoal->opsi_d) }}">
                 </div>
             </div>
+            <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label">Opsi E <span class="text-muted" style="font-weight:normal; font-size:0.85rem;">(Opsional)</span></label>
+                <div style="display:flex; align-items:center;">
+                    <span style="background: #E2E8F0; padding: 0.875rem 1rem; border: 1px solid var(--border); border-right: none; border-radius: 12px 0 0 12px; font-weight: 600;">E</span>
+                    <input type="text" name="opsi_e" class="form-control" style="border-radius: 0 12px 12px 0;" value="{{ old('opsi_e', $bankSoal->opsi_e) }}">
+                </div>
+            </div>
         </div>
 
         <div class="form-group">
@@ -59,6 +66,7 @@
                 <option value="b" {{ old('jawaban_benar', $bankSoal->jawaban_benar) == 'b' ? 'selected' : '' }}>Opsi B</option>
                 <option value="c" {{ old('jawaban_benar', $bankSoal->jawaban_benar) == 'c' ? 'selected' : '' }}>Opsi C</option>
                 <option value="d" {{ old('jawaban_benar', $bankSoal->jawaban_benar) == 'd' ? 'selected' : '' }}>Opsi D</option>
+                <option value="e" {{ old('jawaban_benar', $bankSoal->jawaban_benar) == 'e' ? 'selected' : '' }}>Opsi E</option>
             </select>
         </div>
 

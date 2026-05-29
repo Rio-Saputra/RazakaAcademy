@@ -20,9 +20,28 @@ class UserTryoutController extends Controller
         $total_tryout = $user->results()->count();
         $rata_rata = $user->results()->avg('score') ?? 0;
 
+        // Ambil ID paket yang sudah sukses dibeli oleh user
+        $purchasedPackageIds = \App\Models\Transaction::where('user_id', $user->id)
+            ->where('status', 'success')
+            ->pluck('package_id');
+
+        // Ambil 2 paket tryout yang BELUM dibeli oleh user sebagai rekomendasi
+        $recommended_packages = \App\Models\Package::whereNotIn('id', $purchasedPackageIds)
+            ->limit(2)
+            ->get();
+
+        // Ambil 3 hasil pengerjaan ujian teranyar beserta informasi tryoutnya
+        $recent_results = $user->results()
+            ->with('tryout')
+            ->latest()
+            ->limit(3)
+            ->get();
+
         return view('user.dashboard', compact(
             'total_tryout',
-            'rata_rata'
+            'rata_rata',
+            'recommended_packages',
+            'recent_results'
         ));
     }
 

@@ -32,7 +32,7 @@
                         <span style="color:var(--text-muted);">{{ $res->created_at->format('d M Y, H:i') }}</span>
                     </td>
                     <td style="text-align: right;">
-                        <a href="{{ route('user.tryout.hasil', $res->tryout_id) }}" class="btn btn-secondary" style="padding: 0.5rem 1rem;">
+                        <a href="{{ route('user.tryout.hasil', $res->id) }}" class="btn btn-secondary" style="padding: 0.5rem 1rem;">
                             <i class="fas fa-search"></i> Review
                         </a>
                     </td>

@@ -35,9 +35,9 @@
             </div>
         </div>
         <div>
-            <form action="{{ route('user.paket.beli', $p->id) }}" method="POST" data-confirm="Yakin ingin membeli paket ini?" data-type="buy" data-title="Konfirmasi Pembelian">
+            <form class="midtrans-buy-form" data-package-id="{{ $p->id }}" data-url="{{ route('user.paket.beli', $p->id) }}">
                 @csrf
-                <button type="submit" class="btn btn-primary" style="width: 100%; padding: 1rem; font-size: 1.1rem; border-radius: 50px;">
+                <button type="button" class="btn btn-primary btn-buy-package" style="width: 100%; padding: 1rem; font-size: 1.1rem; border-radius: 50px;">
                     Beli Paket Ini <i class="fas fa-arrow-right" style="margin-left: 0.5rem;"></i>
                 </button>
             </form>
@@ -53,5 +53,72 @@
         box-shadow: var(--shadow-lg);
     }
 </style>
+
+@push('scripts')
+<script>
+    document.querySelectorAll('.midtrans-buy-form .btn-buy-package').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const form = this.closest('.midtrans-buy-form');
+            const url = form.getAttribute('data-url');
+            
+            showModernAlert('buy', 'Konfirmasi Pembelian', 'Yakin ingin membeli paket tryout ini?', () => {
+                // Show loading state
+                const originalText = button.innerHTML;
+                button.disabled = true;
+                button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memproses...';
+                
+                // Perform AJAX request to get Snap Token
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: {
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        button.disabled = false;
+                        button.innerHTML = originalText;
+                        
+                        if (response.success && response.snap_token) {
+                            window.snap.pay(response.snap_token, {
+                                onSuccess: function(result) {
+                                    showModernAlert('success', 'Pembayaran Berhasil', 'Terima kasih, pembayaran sukses dilakukan! Halaman akan dialihkan.');
+                                    setTimeout(() => {
+                                        window.location.href = "{{ route('user.tryout.index') }}";
+                                    }, 2000);
+                                },
+                                onPending: function(result) {
+                                    showModernAlert('warning', 'Pembayaran Pending', 'Silakan selesaikan pembayaran Anda sebelum batas waktu berakhir.');
+                                    setTimeout(() => {
+                                        window.location.href = "{{ route('user.riwayat') }}";
+                                    }, 2500);
+                                },
+                                onError: function(result) {
+                                    showModernAlert('error', 'Pembayaran Gagal', 'Maaf, pembayaran gagal diproses.');
+                                },
+                                onClose: function() {
+                                    showModernAlert('warning', 'Pembayaran Dibatalkan', 'Anda menutup panel pembayaran sebelum menyelesaikannya.');
+                                }
+                            });
+                        } else {
+                            showModernAlert('error', 'Gagal', response.message || 'Gagal memproses transaksi.');
+                        }
+                    },
+                    error: function(xhr) {
+                        button.disabled = false;
+                        button.innerHTML = originalText;
+                        
+                        let msg = 'Terjadi kesalahan sistem.';
+                        if (xhr.responseJSON && xhr.responseJSON.message) {
+                            msg = xhr.responseJSON.message;
+                        }
+                        showModernAlert('error', 'Kesalahan', msg);
+                    }
+                });
+            });
+        });
+    });
+</script>
+@endpush
 
 @endsection

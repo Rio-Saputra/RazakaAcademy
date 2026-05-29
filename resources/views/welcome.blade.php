@@ -22,7 +22,7 @@
             --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
             --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
             --radius: 20px;
-            --transition: all 0.3s ease;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         * {
@@ -365,6 +365,403 @@
             color: var(--text-muted);
         }
 
+        /* ABOUT SECTION */
+        .about {
+            padding: 8rem 5% 6rem;
+            background: var(--bg);
+            display: flex;
+            align-items: center;
+        }
+
+        .about-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+            gap: 4rem;
+            width: 100%;
+        }
+
+        .about-visual {
+            flex: 1;
+        }
+
+        .about-content {
+            flex: 1;
+        }
+
+        .about h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.3;
+        }
+
+        .about h2 span {
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .about p {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        .about-stat-card {
+            background: white;
+            padding: 2rem;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+            text-align: left;
+            transition: var(--transition);
+        }
+
+        .about-stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .about-stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+        }
+
+        .about-stat-card h3 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .about-stat-card p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .about-check-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 0.95rem;
+        }
+
+        .about-check-item i {
+            color: #10B981;
+            font-size: 1.1rem;
+        }
+
+        /* TESTIMONIALS SECTION */
+        .testimonials {
+            padding: 6rem 5%;
+            background: white;
+            text-align: center;
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .testimonial-card {
+            background: var(--bg);
+            padding: 2.5rem;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            text-align: left;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .testimonial-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+            background: white;
+        }
+
+        .stars {
+            color: #F59E0B;
+            margin-bottom: 1.25rem;
+            font-size: 0.95rem;
+        }
+
+        .comment {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            line-height: 1.7;
+            margin-bottom: 2rem;
+            font-style: italic;
+        }
+
+        .profile {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .avatar-initial {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+
+        .profile h4 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .profile span {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        /* FAQ SECTION */
+        .faq-section {
+            padding: 6rem 5%;
+            background: var(--bg);
+            text-align: center;
+        }
+
+        .faq-container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .faq-item {
+            background: white;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            padding: 1.25rem 2rem;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .faq-item:hover {
+            box-shadow: var(--shadow-sm);
+            border-color: var(--primary-light);
+        }
+
+        .faq-question {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .faq-question h3 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .faq-question i {
+            font-size: 1rem;
+            color: var(--text-muted);
+            transition: transform 0.3s ease;
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, margin-top 0.3s ease;
+            margin-top: 0;
+        }
+
+        .faq-answer p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .faq-item.active .faq-question i {
+            transform: rotate(45deg);
+            color: var(--primary);
+        }
+
+        .faq-item.active .faq-answer {
+            margin-top: 1rem;
+        }
+
+        /* CONTACT SECTION */
+        .contact-section {
+            padding: 6rem 5%;
+            background: white;
+        }
+
+        .contact-container {
+            display: flex;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+            gap: 4rem;
+            width: 100%;
+        }
+
+        .contact-info {
+            flex: 1;
+        }
+
+        .contact-form-container {
+            flex: 1;
+            background: var(--bg);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            padding: 3rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .contact-info h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.3;
+        }
+
+        .contact-info h2 span {
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .contact-info p {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+        }
+
+        .contact-detail-card {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+        }
+
+        .contact-icon {
+            width: 54px;
+            height: 54px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.35rem;
+            flex-shrink: 0;
+        }
+
+        .contact-detail-card h4 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.15rem;
+        }
+
+        .contact-detail-card p {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--primary);
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 0.85rem 1.25rem;
+            border-radius: 12px;
+            border: 1.5px solid var(--border);
+            background: white;
+            color: var(--text);
+            font-size: 0.95rem;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .form-group input:focus, .form-group textarea:focus {
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 4px rgba(36, 58, 94, 0.08);
+        }
+
+        .send-icon {
+            transition: transform 0.3s ease;
+        }
+
+        .btn-primary:hover .send-icon {
+            transform: translateX(4px) translateY(-2px);
+        }
+
+        .contact-success-alert {
+            background: #ECFDF5;
+            border: 1px solid #A7F3D0;
+            border-radius: 16px;
+            padding: 1.5rem;
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+            color: #065F46;
+            animation: fadeIn 0.4s ease forwards;
+        }
+
+        .contact-success-alert i {
+            font-size: 1.5rem;
+            color: #10B981;
+            margin-top: 0.15rem;
+        }
+
+        .contact-success-alert h4 {
+            font-size: 1rem;
+            color: #065F46;
+            margin-bottom: 0.25rem;
+        }
+
+        .contact-success-alert p {
+            font-size: 0.875rem;
+            color: #047857;
+            line-height: 1.5;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         /* CTA SECTION */
         .cta-section {
             padding: 5rem 5%;
@@ -430,10 +827,90 @@
         /* FOOTER */
         footer {
             background: white;
-            padding: 3rem 5%;
-            text-align: center;
+            padding: 5rem 5% 2rem;
             border-top: 1px solid var(--border);
             color: var(--text-muted);
+            text-align: left;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1.5fr;
+            gap: 4rem;
+        }
+
+        .footer-about p {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-top: 1rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .social-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: var(--bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 1.1rem;
+            transition: var(--transition);
+            border: 1px solid var(--border);
+        }
+
+        .social-btn:hover {
+            background: var(--primary-gradient);
+            color: white;
+            transform: translateY(-2px);
+            border-color: transparent;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .footer-links h3, .footer-newsletter h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 1.25rem;
+        }
+
+        .footer-links a {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            transition: var(--transition);
+            display: inline-block;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+            transform: translateX(4px);
+        }
+
+        .footer-newsletter p {
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 4rem auto 0;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            font-size: 0.9rem;
         }
 
         @media (max-width: 900px) {
@@ -460,19 +937,44 @@
             .floating-stat {
                 display: none;
             }
+
+            .about-container, .contact-container {
+                flex-direction: column;
+                gap: 3rem;
+            }
+
+            .footer-container {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 3rem;
+            }
         }
 
         @media (max-width: 600px) {
             .nav-links {
                 display: none;
             }
+
             .hero-buttons {
                 flex-direction: column;
                 width: 100%;
             }
+
             .btn {
                 width: 100%;
                 justify-content: center;
+            }
+
+            .about-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .contact-form-container {
+                padding: 1.75rem;
+            }
+
+            .footer-container {
+                grid-template-columns: 1fr;
+                gap: 2.5rem;
             }
         }
     </style>
@@ -482,15 +984,20 @@
     <!-- NAVBAR -->
     <nav class="navbar">
         <a href="/" class="brand">
-            <i class="fas fa-graduation-cap"></i> <span>RAZAKA</span>
+            <img src="{{ asset('images/razakalogo.jpg') }}" alt="Razaka Logo" style="height: 42px; width: 42px; border-radius: 12px; object-fit: cover; box-shadow: var(--shadow-sm); border: 2px solid var(--border);">
+            <span>RAZAKA</span>
         </a>
         <div class="nav-links">
             <a href="#fitur">Fitur</a>
+            <a href="#tentang">Tentang</a>
+            <a href="#testimoni">Testimoni</a>
+            <a href="#faq">FAQ</a>
+            <a href="#kontak">Kontak</a>
             <a href="{{ url('auth/login') }}">Masuk</a>
             <a href="{{ url('auth/register') }}" class="btn btn-primary" style="padding: 0.5rem 1.5rem;">Daftar Gratis</a>
         </div>
     </nav>
-
+ 
     <!-- HERO SECTION -->
     <section class="hero">
         <div class="hero-container">
@@ -511,13 +1018,15 @@
             </div>
             
             <div class="hero-image">
-                <div class="hero-img-box">
-                    <!-- Replace with an actual dashboard preview screenshot or illustration -->
-                    <img src="https://placehold.co/800x500/F8FAFC/243A5E?text=Dashboard+Preview" alt="Dashboard Razaka">
+                <!-- Modern neon glowing blur circles behind image -->
+                <div style="position: absolute; width: 130%; height: 130%; background: radial-gradient(circle, rgba(56, 189, 248, 0.25) 0%, rgba(255,255,255,0) 70%); top: -15%; left: -15%; z-index: 0; filter: blur(30px); border-radius: 50%; pointer-events: none;"></div>
+                
+                <div class="hero-img-box" style="z-index: 2;">
+                    <img src="{{ asset('images/students_taking_exam.png') }}" alt="Siswa Mengerjakan Ujian di Razaka Academy">
                 </div>
                 
                 <!-- Floating Stats -->
-                <div class="floating-stat stat-1">
+                <div class="floating-stat stat-1" style="z-index: 3;">
                     <div class="floating-icon">
                         <i class="fas fa-chart-line"></i>
                     </div>
@@ -526,8 +1035,8 @@
                         <div style="font-size: 0.8rem; color: var(--text-muted);">Grafik Performa</div>
                     </div>
                 </div>
-
-                <div class="floating-stat stat-2">
+ 
+                <div class="floating-stat stat-2" style="z-index: 3;">
                     <div class="floating-icon">
                         <i class="fas fa-check-circle"></i>
                     </div>
@@ -572,6 +1081,259 @@
         </div>
     </section>
 
+    <!-- ABOUT SECTION -->
+    <section class="about" id="tentang">
+        <div class="about-container">
+            <div class="about-visual">
+                <div class="about-grid">
+                    <div class="about-stat-card">
+                        <div class="about-stat-icon" style="background: rgba(56, 189, 248, 0.1); color: #38BDF8;">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h3>10K+</h3>
+                        <p>Siswa Aktif</p>
+                    </div>
+                    <div class="about-stat-card">
+                        <div class="about-stat-icon" style="background: rgba(16, 185, 129, 0.1); color: #10B981;">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <h3>98%</h3>
+                        <p>Tingkat Kelulusan</p>
+                    </div>
+                    <div class="about-stat-card">
+                        <div class="about-stat-icon" style="background: rgba(245, 158, 11, 0.1); color: #F59E0B;">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <h3>500+</h3>
+                        <p>Paket Ujian</p>
+                    </div>
+                    <div class="about-stat-card">
+                        <div class="about-stat-icon" style="background: rgba(99, 102, 241, 0.1); color: #6366F1;">
+                            <i class="fas fa-headset"></i>
+                        </div>
+                        <h3>24/7</h3>
+                        <p>Bimbingan Mentor</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="about-content">
+                <div class="badge-pill">
+                    <i class="fas fa-info-circle"></i> Tentang Razaka Academy
+                </div>
+                <h2>Membuka Jalan Menuju <span>Masa Depan Impian Anda</span></h2>
+                <p>Razaka Academy didirikan untuk menjadi pionir bimbingan ujian online terpercaya yang fokus pada peningkatan kompetensi siswa secara terstruktur dan terukur. Kami menggabungkan materi ujian berbasis kisi-kisi terupdate dengan teknologi analitik modern.</p>
+                <p style="margin-top: 1rem;">Misi utama kami adalah menyediakan akses pendidikan berkualitas tinggi bagi setiap pejuang impian—baik calon mahasiswa baru (UTBK/Mandiri), calon aparatur sipil negara (CPNS/PPPK), maupun sertifikasi profesional internasional.</p>
+                <div style="margin-top: 2rem; display: flex; gap: 1.5rem; flex-wrap: wrap;">
+                    <div class="about-check-item">
+                        <i class="fas fa-check-circle"></i> Kurikulum Kisi-Kisi Terbaru
+                    </div>
+                    <div class="about-check-item">
+                        <i class="fas fa-check-circle"></i> Simulasi CAT Realistis
+                    </div>
+                    <div class="about-check-item">
+                        <i class="fas fa-check-circle"></i> Rapor Statistik Pintar
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TESTIMONIALS SECTION -->
+    <section class="testimonials" id="testimoni">
+        <h2 class="section-title">Kisah Sukses Alumni</h2>
+        <p class="section-subtitle">Ribuan alumni Razaka Academy telah berhasil menembus perguruan tinggi negeri impian dan instansi kementerian pilihan mereka.</p>
+        
+        <div class="testimonials-grid">
+            <div class="testimonial-card">
+                <div>
+                    <div class="stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="comment">"Sistem CAT di Razaka Academy sangat mirip dengan aslinya saat tes CPNS kemarin. Analisis statistiknya sangat membantu saya mengetahui kelemahan materi TIU saya sehingga saya bisa mengasah materi tersebut secara fokus. Alhamdullilah tahun ini lolos!"</p>
+                </div>
+                <div class="profile">
+                    <div class="avatar-initial" style="background: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%);">AP</div>
+                    <div>
+                        <h4>Adi Pratama</h4>
+                        <span>PNS di Kemenkumham RI</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="testimonial-card">
+                <div>
+                    <div class="stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="comment">"Tryout UTBK-nya sangat menantang! Pembahasan soalnya sangat detail dan ada rumus-rumus cepat yang ga diajarin di sekolah. Terutama pengerjaan TPS yang butuh waktu cepat. Sangat merekomendasikan Razaka bagi yang pejuang kampus!"</p>
+                </div>
+                <div class="profile">
+                    <div class="avatar-initial" style="background: linear-gradient(135deg, #EC4899 0%, #BE185D 100%);">NS</div>
+                    <div>
+                        <h4>Nabila Salsabila</h4>
+                        <span>Alumni Sukses (Universitas Indonesia)</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="testimonial-card">
+                <div>
+                    <div class="stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="comment">"Dari semua platform tryout online, Razaka yang paling user-friendly dan responsif di handphone. Pembahasan soal dalam bentuk tulisan yang rapi sangat gampang dipahami. Score prediksi kelulusan akurat dengan nilai UTBK asli saya!"</p>
+                </div>
+                <div class="profile">
+                    <div class="avatar-initial" style="background: linear-gradient(135deg, #10B981 0%, #047857 100%);">RK</div>
+                    <div>
+                        <h4>Rian Kurniawan</h4>
+                        <span>Alumni Sukses (ITB - Teknik Informatika)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ SECTION -->
+    <section class="faq-section" id="faq">
+        <h2 class="section-title">Pertanyaan yang Sering Diajukan</h2>
+        <p class="section-subtitle">Butuh informasi cepat tentang Razaka Academy? Temukan jawaban atas pertanyaan umum seputar program kami di bawah ini.</p>
+        
+        <div class="faq-container">
+            <div class="faq-item">
+                <div class="faq-question">
+                    <h3>Bagaimana cara mendaftar dan mengikuti tryout di Razaka?</h3>
+                    <i class="fas fa-plus"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>Sangat mudah! Anda hanya perlu mengeklik tombol "Daftar Gratis" di navbar, mengisi formulir pendaftaran singkat, lalu masuk ke Dashboard. Di sana, Anda dapat langsung memilih paket tryout gratis yang tersedia atau membeli paket ujian premium untuk koleksi soal yang lebih lengkap.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    <h3>Apakah paket tryout yang dibeli memiliki masa aktif?</h3>
+                    <i class="fas fa-plus"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>Semua paket tryout premium di Razaka Academy memiliki masa aktif yang bervariasi dari 6 bulan hingga 1 tahun penuh tergantung pada paket yang Anda beli. Selama masa aktif masih berlaku, Anda bebas mengulang pengerjaan soal dan meninjau pembahasan kapan saja.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    <h3>Apakah pembahasan soal langsung dapat diakses setelah ujian selesai?</h3>
+                    <i class="fas fa-plus"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>Ya! Segera setelah Anda menekan tombol "Selesai" dan mengirimkan jawaban Anda, sistem kami akan langsung menyajikan skor pencapaian beserta rapor performa. Di halaman riwayat, Anda bisa membuka review pembahasan lengkap (HTML-safe) step-by-step untuk seluruh butir soal.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    <h3>Metode pembayaran apa saja yang didukung untuk paket premium?</h3>
+                    <i class="fas fa-plus"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>Kami mendukung berbagai jenis metode pembayaran yang instan dan aman, mencakup Transfer Bank Manual, Virtual Account Bank (Mandiri, BNI, BRI, BCA), Dompet Digital (Gopay, OVO, Dana), serta pembayaran QRIS.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACT SECTION -->
+    <section class="contact-section" id="kontak">
+        <div class="contact-container">
+            <div class="contact-info">
+                <div class="badge-pill">
+                    <i class="fas fa-envelope"></i> Hubungi Kami
+                </div>
+                <h2>Kami Senang <span>Mendengar dari Anda</span></h2>
+                <p>Memiliki kendala teknis, pertanyaan seputar paket, atau tawaran kolaborasi? Layanan bantuan pelanggan kami siap merespon pertanyaan Anda dalam waktu singkat.</p>
+                
+                <div class="contact-details" style="margin-top: 2.5rem; display: flex; flex-direction: column; gap: 1.5rem;">
+                    <div class="contact-detail-card">
+                        <div class="contact-icon" style="background: rgba(36, 58, 94, 0.1); color: var(--primary);">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div>
+                            <h4>Alamat Kantor</h4>
+                            <p>Jl. Jenderal Sudirman No. 45, Kuningan, Jakarta Selatan, 12920</p>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-detail-card">
+                        <div class="contact-icon" style="background: rgba(56, 189, 248, 0.1); color: var(--accent);">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div>
+                            <h4>Email Bantuan</h4>
+                            <p>support@razakaacademy.com</p>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-detail-card">
+                        <div class="contact-icon" style="background: rgba(16, 185, 129, 0.1); color: #10B981;">
+                            <i class="fas fa-phone-alt"></i>
+                        </div>
+                        <div>
+                            <h4>WhatsApp Hotline</h4>
+                            <a href="https://wa.me/6281234567890" target="_blank" style="color: #10B981; font-weight: 700; display: flex; align-items: center; gap: 0.25rem;">
+                                +62 812-3456-7890 <i class="fas fa-external-link-alt" style="font-size: 0.75rem;"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="contact-form-container">
+                <form id="contactForm" onsubmit="handleContactSubmit(event)">
+                    <div class="form-group">
+                        <label for="c_name">Nama Lengkap</label>
+                        <input type="text" id="c_name" required placeholder="Masukkan nama Anda">
+                    </div>
+                    <div class="form-group">
+                        <label for="c_email">Alamat Email</label>
+                        <input type="email" id="c_email" required placeholder="Masukkan email Anda">
+                    </div>
+                    <div class="form-group">
+                        <label for="c_subject">Subjek Pesan</label>
+                        <input type="text" id="c_subject" required placeholder="Pertanyaan umum, kendala teknis, dll.">
+                    </div>
+                    <div class="form-group">
+                        <label for="c_message">Isi Pesan</label>
+                        <textarea id="c_message" required rows="4" placeholder="Tuliskan pesan atau pertanyaan Anda disini..."></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 0.9rem;">
+                        Kirim Pesan <i class="fas fa-paper-plane send-icon"></i>
+                    </button>
+                </form>
+                
+                <div id="contactSuccess" class="contact-success-alert" style="display: none;">
+                    <i class="fas fa-check-circle"></i>
+                    <div>
+                        <h4>Pesan Berhasil Terkirim!</h4>
+                        <p>Terima kasih telah menghubungi kami. Tim kami akan segera menanggapi melalui email dalam waktu 1x24 jam.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- CTA SECTION -->
     <section class="cta-section">
         <div class="cta-container">
@@ -583,10 +1345,158 @@
         </div>
     </section>
 
-    <!-- FOOTER -->
+    <!-- MULTI-COLUMN FOOTER -->
     <footer>
-        <p>&copy; 2026 RAZAKA ACADEMY. Semua Hak Cipta Dilindungi.</p>
+        <div class="footer-container">
+            <div class="footer-about">
+                <a href="/" class="brand" style="margin-bottom: 1.5rem; display: inline-flex;">
+                    <img src="{{ asset('images/razakalogo.jpg') }}" alt="Razaka Logo" style="height: 42px; width: 42px; border-radius: 12px; object-fit: cover; box-shadow: var(--shadow-sm); border: 2px solid var(--border);">
+                    <span style="font-size: 1.5rem;">RAZAKA</span>
+                </a>
+                <p>Platform tryout dan bimbingan belajar online CPNS, UTBK, Mandiri, dan TOEFL terpercaya dengan ribuan latihan soal berkualitas tinggi.</p>
+                <div class="social-links">
+                    <a href="#" class="social-btn"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="social-btn"><i class="fab fa-youtube"></i></a>
+                    <a href="#" class="social-btn"><i class="fab fa-tiktok"></i></a>
+                    <a href="#" class="social-btn"><i class="fab fa-facebook"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-links">
+                <h3>Navigasi Cepat</h3>
+                <a href="#fitur">Fitur Utama</a>
+                <a href="#tentang">Tentang Kami</a>
+                <a href="#testimoni">Kisah Alumni</a>
+                <a href="#faq">Tanya Jawab FAQ</a>
+                <a href="#kontak">Hubungi Kami</a>
+            </div>
+            
+            <div class="footer-links">
+                <h3>Program Tryout</h3>
+                <a href="{{ url('auth/login') }}">Tryout SKD CPNS</a>
+                <a href="{{ url('auth/login') }}">Tryout UTBK-SNBT</a>
+                <a href="{{ url('auth/login') }}">Tryout Mandiri PTN</a>
+                <a href="{{ url('auth/login') }}">Tryout TOEFL Prep</a>
+            </div>
+            
+            <div class="footer-newsletter">
+                <h3>Newsletter</h3>
+                <p>Berlangganan tips pengerjaan soal ujian tercepat dan update kisi-kisi langsung di inbox email Anda.</p>
+                <form id="newsletterForm" onsubmit="handleNewsletterSubmit(event)" style="margin-top: 1rem; display: flex; gap: 0.5rem;">
+                    <input type="email" required placeholder="Alamat email Anda" style="padding: 0.75rem 1rem; border-radius: 50px; border: 1.5px solid var(--border); background: var(--bg); outline: none; font-size: 0.9rem; flex: 1;">
+                    <button type="submit" class="btn btn-primary" style="padding: 0 1.25rem; border-radius: 50px; justify-content: center;">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </form>
+                <div id="newsletterSuccess" style="display: none; color: #10B981; font-size: 0.85rem; font-weight: 600; margin-top: 0.5rem; text-align: left;">
+                    <i class="fas fa-check-circle"></i> Berhasil Berlangganan!
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2026 RAZAKA ACADEMY. Semua Hak Cipta Dilindungi. Dibuat dengan dedikasi di Indonesia.</p>
+        </div>
     </footer>
 
+    <!-- SCRIPTS -->
+    <script>
+        // Smooth scrolling to anchors
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    e.preventDefault();
+                    const navbarHeight = document.querySelector('.navbar').offsetHeight;
+                    const targetPosition = targetElement.getBoundingClientRect().top + window.scrollY - navbarHeight;
+                    
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // FAQ Accordion Interactivity
+        document.querySelectorAll('.faq-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const isActive = item.classList.contains('active');
+                
+                // Close all other FAQ items
+                document.querySelectorAll('.faq-item').forEach(otherItem => {
+                    otherItem.classList.remove('active');
+                    otherItem.querySelector('.faq-answer').style.maxHeight = null;
+                });
+                
+                // Toggle active item
+                if (!isActive) {
+                    item.classList.add('active');
+                    const answer = item.querySelector('.faq-answer');
+                    answer.style.maxHeight = answer.scrollHeight + 'px';
+                }
+            });
+        });
+
+        // Handle Contact Form Submit Mock
+        function handleContactSubmit(event) {
+            event.preventDefault();
+            const form = document.getElementById('contactForm');
+            const alertSuccess = document.getElementById('contactSuccess');
+            
+            // Hide form and show success alert
+            form.style.display = 'none';
+            alertSuccess.style.display = 'flex';
+            
+            // Log for verification
+            console.log('Form Kontak Terkirim:', {
+                nama: document.getElementById('c_name').value,
+                email: document.getElementById('c_email').value,
+                subjek: document.getElementById('c_subject').value,
+                pesan: document.getElementById('c_message').value
+            });
+        }
+
+        // Handle Newsletter Form Submit Mock
+        function handleNewsletterSubmit(event) {
+            event.preventDefault();
+            const form = document.getElementById('newsletterForm');
+            const success = document.getElementById('newsletterSuccess');
+            
+            form.style.display = 'none';
+            success.style.display = 'block';
+        }
+
+        // Scroll Spy active navigation highlight
+        window.addEventListener('scroll', () => {
+            const sections = document.querySelectorAll('section[id]');
+            const scrollPos = window.scrollY + document.querySelector('.navbar').offsetHeight + 100;
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.offsetHeight;
+                const sectionId = section.getAttribute('id');
+                
+                if (scrollPos >= sectionTop && scrollPos < sectionTop + sectionHeight) {
+                    document.querySelectorAll('.nav-links a').forEach(link => {
+                        if (link.getAttribute('href') === '#' + sectionId) {
+                            link.style.color = 'var(--primary)';
+                            link.style.fontWeight = '700';
+                        } else {
+                            // Only target sections in nav menu
+                            const href = link.getAttribute('href');
+                            if (href && href.startsWith('#')) {
+                                link.style.color = 'var(--text-muted)';
+                                link.style.fontWeight = '500';
+                            }
+                        }
+                    });
+                }
+            });
+        });
+    </script>
 </body>
 </html>

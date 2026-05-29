@@ -4,16 +4,31 @@
 <div class="page-header" style="display: flex; justify-content: space-between; align-items: center;">
     <div>
         <div style="display:flex; align-items:center; gap: 0.5rem; margin-bottom: 0.5rem;">
-            <a href="{{ route('admin.bank-soal.index', ['kategori_id' => $kategori->id]) }}" style="color: rgba(255,255,255,0.7); font-weight: 500;"><i class="fas fa-arrow-left"></i> Kembali ke Soal</a>
+            <a href="{{ $kategori ? route('admin.bank-soal.index', ['kategori_id' => $kategori->id]) : route('admin.bank-soal.index') }}" style="color: rgba(255,255,255,0.7); font-weight: 500;"><i class="fas fa-arrow-left"></i> Kembali ke Bank Soal</a>
         </div>
-        <h1 class="page-title" style="margin: 0;">Tambah Soal: {{ $kategori->nama_kategori }}</h1>
+        <h1 class="page-title" style="margin: 0;">Tambah Soal {{ $kategori ? ': ' . $kategori->nama_kategori : 'Baru' }}</h1>
         <p class="subtitle">Tambahkan satu atau lebih pertanyaan baru sekaligus.</p>
     </div>
 </div>
 
 <form action="{{ route('admin.bank-soal.store') }}" method="POST" id="form-multi-soal">
     @csrf
-    <input type="hidden" name="kategori_id" value="{{ $kategori->id }}">
+    
+    @if($kategori)
+        <input type="hidden" name="kategori_id" value="{{ $kategori->id }}">
+    @else
+        <div class="card" style="margin-bottom: 1.5rem; padding: 1.5rem;">
+            <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label" style="font-weight: 600; color: var(--primary);">Pilih Kategori Bank Soal <span style="color:#EF4444">*</span></label>
+                <select name="kategori_id" class="form-control" required style="cursor: pointer;">
+                    <option value="" disabled selected>-- Silakan Pilih Kategori Tujuan Soal --</option>
+                    @foreach($kategoris as $k)
+                        <option value="{{ $k->id }}">{{ $k->nama_kategori }}</option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
+    @endif
     
     <div id="soal-container">
         <!-- Item Soal (Template) -->
@@ -57,6 +72,13 @@
                         <input type="text" name="soals[0][opsi_d]" class="form-control" style="border-radius: 0 12px 12px 0;" required>
                     </div>
                 </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label">Opsi E <span class="text-muted" style="font-weight:normal; font-size:0.85rem;">(Opsional)</span></label>
+                    <div style="display:flex; align-items:center;">
+                        <span style="background: #E2E8F0; padding: 0.875rem 1rem; border: 1px solid var(--border); border-right: none; border-radius: 12px 0 0 12px; font-weight: 600;">E</span>
+                        <input type="text" name="soals[0][opsi_e]" class="form-control" style="border-radius: 0 12px 12px 0;">
+                    </div>
+                </div>
             </div>
 
             <div class="form-group">
@@ -67,6 +89,7 @@
                     <option value="b">Opsi B</option>
                     <option value="c">Opsi C</option>
                     <option value="d">Opsi D</option>
+                    <option value="e">Opsi E</option>
                 </select>
             </div>
         </div>
@@ -79,7 +102,7 @@
     </div>
 
     <div class="card" style="display: flex; justify-content: flex-end; gap: 1rem; position: sticky; bottom: 1rem; z-index: 10;">
-        <a href="{{ route('admin.bank-soal.index', ['kategori_id' => $kategori->id]) }}" class="btn btn-secondary">Batal</a>
+        <a href="{{ $kategori ? route('admin.bank-soal.index', ['kategori_id' => $kategori->id]) : route('admin.bank-soal.index') }}" class="btn btn-secondary">Batal</a>
         <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Simpan Semua Soal</button>
     </div>
 </form>

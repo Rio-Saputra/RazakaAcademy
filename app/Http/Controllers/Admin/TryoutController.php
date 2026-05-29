@@ -72,6 +72,7 @@ class TryoutController extends Controller
                 'option_b' => $soal->opsi_b,
                 'option_c' => $soal->opsi_c,
                 'option_d' => $soal->opsi_d,
+                'option_e' => $soal->opsi_e,
                 'correct_answer' => strtoupper($soal->jawaban_benar)
             ]);
             $inserted++;

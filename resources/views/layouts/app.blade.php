@@ -530,6 +530,663 @@ tbody tr:hover {
     }
 }
 </style>
+    @if(!request()->is('admin*'))
+    <style>
+        :root {
+            /* Inverted Premium Navy Theme for Students */
+            --bg: #F8FAFC;
+            --card: #243A5E; /* Navy is the dominant card background! */
+            --text: #FFFFFF; /* White text for cards */
+            --text-muted: #CBD5E1; /* Light Slate for muted text */
+            --border: rgba(255, 255, 255, 0.12); /* Semi-transparent border */
+            --shadow-sm: 0 10px 30px rgba(36, 58, 94, 0.08);
+            --shadow-md: 0 15px 35px rgba(36, 58, 94, 0.12);
+            --shadow-hover: 0 25px 45px rgba(36, 58, 94, 0.2);
+            --radius: 20px;
+        }
+
+        body {
+            background-color: #F1F5F9; /* Clean minimalist gray background */
+            color: #1E293B; /* Global page text color */
+        }
+
+        /* Sidebar: Solid deep navy */
+        .sidebar {
+            background: #1E2F4D; 
+            border-right: none;
+            padding: 2.25rem 1.5rem;
+        }
+
+        .sidebar-brand {
+            color: #FFFFFF !important;
+            font-size: 1.6rem;
+            letter-spacing: 0.5px;
+            font-family: 'Poppins', sans-serif;
+            margin-bottom: 3rem;
+            font-weight: 800;
+        }
+
+        .sidebar-brand i {
+            color: var(--accent) !important;
+            -webkit-text-fill-color: initial !important;
+        }
+
+        .nav-item {
+            padding: 0.95rem 1.25rem;
+            border-radius: 16px;
+            font-size: 0.98rem;
+            margin-bottom: 0.65rem;
+            color: #94A3B8;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: var(--transition);
+        }
+
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.06);
+            color: #FFFFFF;
+            transform: translateX(6px);
+        }
+
+        .nav-item.active {
+            background: #FFFFFF !important;
+            color: #1E2F4D !important;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15) !important;
+        }
+
+        .nav-item.active i {
+            color: #1E2F4D !important;
+        }
+
+        /* Topbar & User profile */
+        .topbar {
+            background: #FFFFFF;
+            border-bottom: 1px solid #E2E8F0;
+        }
+
+        .user-profile {
+            border: 1px solid #E2E8F0 !important;
+            background: #F8FAFC !important;
+            padding: 0.5rem 1rem !important;
+            color: #1E293B !important;
+        }
+
+        .user-profile span {
+            color: #1E293B !important;
+        }
+
+        /* Page Headers */
+        .page-header {
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            box-shadow: var(--shadow-sm);
+            border-radius: 24px;
+            padding: 2.75rem;
+            color: #1E293B;
+        }
+
+        .page-header .page-title {
+            color: #1E293B !important;
+        }
+
+        .page-header .subtitle {
+            color: #64748B !important;
+        }
+
+        /* General Card Legibility Overrides */
+        .card {
+            background: var(--card) !important;
+            border: 1px solid var(--border) !important;
+            color: #FFFFFF !important;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-hover);
+        }
+
+        .card h1, .card h2, .card h3, .card h4, .card h5, .card h6, .card p, .card span, .card label, .card strong, .card td {
+            color: #FFFFFF !important;
+        }
+
+        .card .text-muted, .card p[style*="var(--text-muted)"], .card span[style*="var(--text-muted)"], .card p[style*="color: #64748B"], .card p[style*="color:var(--text-muted)"], .card small {
+            color: #CBD5E1 !important;
+        }
+
+        /* Glowing Accent highlights inside cards */
+        .card h1[style*="color: var(--primary)"], .card h1[style*="color:var(--primary)"], .card .rec-price, .card .greeting-stat-val {
+            color: #38BDF8 !important; /* Elegant Glowing Cyan */
+        }
+
+        .card[style*="border-top: 4px solid var(--primary)"], .card[style*="border-top:4px solid var(--primary)"] {
+            border-top: 4px solid #38BDF8 !important;
+        }
+
+        /* Glassmorphic overlay for internal light panels inside cards */
+        .card div[style*="background: #F8FAFC"], .card div[style*="background:#F8FAFC"], .card div[style*="background: #f8fafc"] {
+            background: rgba(255, 255, 255, 0.05) !important;
+            border: 1px solid rgba(255, 255, 255, 0.08) !important;
+        }
+
+        /* Form Controls & Inputs legibility (White box with dark text is ultra-minimalist and readable) */
+        .form-control, select.form-control, textarea.form-control {
+            background: #FFFFFF !important;
+            color: #1E293B !important;
+            border: 1.5px solid #CBD5E1 !important;
+            border-radius: 12px;
+        }
+
+        .form-control:focus {
+            border-color: #38BDF8 !important;
+            box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.1) !important;
+            background: #FFFFFF !important;
+        }
+
+        .form-label {
+            color: #FFFFFF !important;
+            font-weight: 600;
+        }
+
+        /* Table modernizations inside cards */
+        .table-container {
+            background: var(--card) !important;
+            border: 1px solid var(--border) !important;
+            box-shadow: var(--shadow-sm);
+        }
+
+        table th {
+            background: rgba(255, 255, 255, 0.06) !important;
+            color: #FFFFFF !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+            font-weight: 700;
+        }
+
+        table td {
+            color: #FFFFFF !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+        }
+
+        tbody tr:hover {
+            background: rgba(255, 255, 255, 0.03) !important;
+        }
+
+        /* Specific modifications for user dashboard page cards */
+        .minimal-greeting-card {
+            background: var(--card) !important;
+            color: var(--text) !important;
+            border: 1px solid var(--border) !important;
+        }
+
+        .greeting-title {
+            color: #FFFFFF !important;
+        }
+
+        .greeting-subtitle {
+            color: var(--text-muted) !important;
+        }
+
+        .greeting-stat-val {
+            color: #38BDF8 !important;
+        }
+
+        .greeting-stat-lbl {
+            color: var(--text-muted) !important;
+        }
+
+        /* Quick Navigation Tiles */
+        .quick-tile-card {
+            background: #FFFFFF !important; /* White as secondary! */
+            border: 1px solid #E2E8F0 !important;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .quick-tile-card:hover {
+            border-color: rgba(36, 58, 94, 0.15) !important;
+            box-shadow: var(--shadow-md) !important;
+        }
+
+        .quick-tile-card h4 {
+            color: #1E293B !important;
+        }
+
+        .quick-tile-card p {
+            color: #64748B !important;
+        }
+
+        .section-title-min {
+            color: #1E293B !important;
+            font-size: 1.35rem !important;
+            font-weight: 700 !important;
+            margin: 1.5rem 0 1rem 0 !important;
+        }
+
+        /* Recommended packages - keep Navy but use white buttons */
+        .rec-package-card {
+            background: var(--card) !important;
+            border: 1px solid var(--border) !important;
+            color: var(--text) !important;
+        }
+
+        .rec-title-meta h4 {
+            color: #FFFFFF !important;
+        }
+
+        .rec-price {
+            color: #38BDF8 !important;
+        }
+
+        .rec-desc {
+            color: var(--text-muted) !important;
+        }
+
+        .btn-buy-min {
+            border: 1.5px solid #FFFFFF !important;
+            color: #FFFFFF !important;
+        }
+
+        .btn-buy-min:hover {
+            background: #FFFFFF !important;
+            color: #1E2F4D !important;
+        }
+
+        /* Sidebar profile and activity cards */
+        .min-profile-card {
+            background: var(--card) !important;
+            border: 1px solid var(--border) !important;
+            color: var(--text) !important;
+        }
+
+        .profile-name {
+            color: #FFFFFF !important;
+        }
+
+        .profile-email {
+            color: var(--text-muted) !important;
+        }
+
+        .profile-badge-role {
+            background: rgba(255, 255, 255, 0.08) !important;
+            color: #38BDF8 !important;
+        }
+
+        .profile-avatar-circle {
+            border: 4px solid var(--card) !important;
+        }
+
+        .recent-activities-card {
+            background: var(--card) !important;
+            border: 1px solid var(--border) !important;
+            color: var(--text) !important;
+        }
+
+        .sidebar-sec-title {
+            color: #FFFFFF !important;
+            border-bottom: 1px solid var(--border) !important;
+        }
+
+        .activity-item-card {
+            background: rgba(255, 255, 255, 0.04) !important;
+            border: 1px solid var(--border) !important;
+        }
+
+        .activity-tryout-name {
+            color: #FFFFFF !important;
+        }
+
+        .activity-date {
+            color: var(--text-muted) !important;
+        }
+
+        .activity-score-badge {
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 0.2rem 0.5rem;
+            border-radius: 6px;
+        }
+
+        .activity-link-btn {
+            color: #38BDF8 !important;
+        }
+
+        .activity-link-btn:hover {
+            color: #FFFFFF !important;
+        }
+
+        .badge-high {
+            background: rgba(16, 185, 129, 0.15) !important;
+            color: #34D399 !important;
+        }
+
+        .badge-mid {
+            background: rgba(255, 255, 255, 0.1) !important;
+            color: #E2E8F0 !important;
+        }
+
+        /* High-contrast and premium legibility badges on student pages */
+        .card .badge-success, .badge.badge-success, .badge-success {
+            background-color: #DEF7EC !important;
+            color: #03543F !important;
+        }
+
+        .card .badge-warning, .badge.badge-warning, .badge-warning {
+            background-color: #FEF3C7 !important;
+            color: #92400E !important;
+        }
+
+        .card .badge-danger, .badge.badge-danger, .badge-danger {
+            background-color: #FDE8E8 !important;
+            color: #9B1C1C !important;
+        }
+
+        /* Readable secondary buttons inside navy student cards/tables */
+        .btn-secondary, a.btn-secondary, .card .btn-secondary, .card a.btn-secondary {
+            background: #FFFFFF !important;
+            color: #1E293B !important;
+            border: 1.5px solid #CBD5E1 !important;
+        }
+
+        .btn-secondary:hover, a.btn-secondary:hover, .card .btn-secondary:hover, .card a.btn-secondary:hover {
+            background: #F8FAFC !important;
+            color: #0F172A !important;
+            border-color: #94A3B8 !important;
+        }
+
+        /* Clean and premium disabled buttons inside navy student cards */
+        .btn:disabled, button:disabled, .btn[disabled], .card button:disabled, .card .btn:disabled {
+            background: rgba(255, 255, 255, 0.12) !important;
+            color: rgba(255, 255, 255, 0.6) !important;
+            border: 1px solid rgba(255, 255, 255, 0.05) !important;
+            cursor: not-allowed !important;
+            opacity: 0.8 !important;
+        }
+        /* Dynamic collapsible sidebar on student pages */
+        .hamburger {
+            display: block !important; /* Always show hamburger toggle on student pages */
+            background: none;
+            border: none;
+            font-size: 1.35rem;
+            color: #1E293B !important;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 8px;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hamburger:hover {
+            background: rgba(0, 0, 0, 0.05) !important;
+        }
+
+        .main-content {
+            transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        }
+
+        .sidebar {
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        }
+
+        .sidebar-collapsed .sidebar {
+            transform: translateX(-280px) !important;
+        }
+
+        .sidebar-collapsed .main-content {
+            margin-left: 0 !important;
+        }
+
+        @media (max-width: 1024px) {
+            .sidebar-collapsed .sidebar {
+                transform: translateX(-100%) !important;
+            }
+            .sidebar-collapsed .main-content {
+                margin-left: 0 !important;
+            }
+        }
+
+        /* Sticky Tryout Header Premium Dark Navy */
+        .header-tryout-premium {
+            background: rgba(36, 58, 94, 0.95) !important;
+            border: 1px solid rgba(255, 255, 255, 0.12) !important;
+            backdrop-filter: blur(12px) !important;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15) !important;
+            color: #FFFFFF !important;
+        }
+
+        .tryout-title-text {
+            color: #FFFFFF !important;
+        }
+
+        .tryout-desc-text {
+            color: #CBD5E1 !important;
+        }
+
+        .timer-widget {
+            background: rgba(255, 255, 255, 0.08) !important;
+            border: 1.5px solid rgba(255, 255, 255, 0.12) !important;
+        }
+
+        .timer-icon {
+            color: #38BDF8 !important;
+        }
+
+        #timer {
+            color: #38BDF8 !important;
+        }
+
+        .progress-info span {
+            color: #CBD5E1 !important;
+        }
+
+        .progress-track {
+            background: rgba(255, 255, 255, 0.12) !important;
+            border-radius: 50px !important;
+            overflow: hidden !important;
+        }
+
+        #progressBar {
+            background: linear-gradient(90deg, #38BDF8 0%, #0EA5E9 100%) !important;
+        }
+
+        /* Question Badge */
+        .card .question-number-badge, .question-number-badge {
+            background: rgba(255, 255, 255, 0.08) !important;
+            color: #38BDF8 !important;
+            border: 1px solid rgba(255, 255, 255, 0.12) !important;
+        }
+
+        /* Option Cards Legibility inside Navy student cards */
+        .option-card-label {
+            background: rgba(255, 255, 255, 0.05) !important;
+            border: 2px solid rgba(255, 255, 255, 0.12) !important;
+            color: #FFFFFF !important;
+        }
+
+        .option-card-label:hover {
+            background: rgba(255, 255, 255, 0.08) !important;
+            border-color: #38BDF8 !important;
+        }
+
+        .option-text-span {
+            color: #FFFFFF !important;
+        }
+
+        .option-letter-badge {
+            background: rgba(255, 255, 255, 0.08) !important;
+            color: #CBD5E1 !important;
+            border: 1px solid rgba(255, 255, 255, 0.12) !important;
+        }
+
+        .option-card-label:hover .option-letter-badge {
+            background: rgba(56, 189, 248, 0.15) !important;
+            color: #38BDF8 !important;
+            border-color: #38BDF8 !important;
+        }
+
+        .option-card-label:has(input:checked) {
+            border-color: #38BDF8 !important;
+            background: rgba(56, 189, 248, 0.1) !important;
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.15) !important;
+        }
+
+        .option-card-label:has(input:checked) .option-letter-badge {
+            background: #38BDF8 !important;
+            color: #1E293B !important;
+            border-color: #38BDF8 !important;
+        }
+
+        .option-card-label:has(input:checked) .option-check-icon {
+            color: #38BDF8 !important;
+            opacity: 1 !important;
+            transform: scale(1) !important;
+        }
+
+        /* Nav Buttons inside Student Navy Sidebar Card */
+        .nav-btn-premium {
+            background: rgba(255, 255, 255, 0.08) !important;
+            border: 2px solid rgba(255, 255, 255, 0.12) !important;
+            color: #FFFFFF !important;
+        }
+
+        .nav-btn-premium:hover {
+            background: rgba(255, 255, 255, 0.15) !important;
+            border-color: #38BDF8 !important;
+        }
+
+        .nav-btn-premium.answered {
+            background: #10B981 !important;
+            color: #FFFFFF !important;
+            border-color: #10B981 !important;
+            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.15) !important;
+        }
+
+        .nav-btn-premium.active-pos {
+            background: #38BDF8 !important;
+            color: #1E293B !important;
+            border-color: #38BDF8 !important;
+            box-shadow: 0 4px 12px rgba(56, 189, 248, 0.25) !important;
+        }
+
+        .nav-btn-premium.answered.active-pos {
+            background: #059669 !important;
+            border-color: #059669 !important;
+            color: #FFFFFF !important;
+            box-shadow: 0 4px 12px rgba(5, 150, 105, 0.25) !important;
+        }
+
+        /* Navigation Legend colors */
+        .legend-color.unanswered {
+            background: rgba(255, 255, 255, 0.08) !important;
+            border: 2px solid rgba(255, 255, 255, 0.15) !important;
+        }
+
+        .legend-color.current {
+            background: #38BDF8 !important;
+        }
+
+        /* Premium Profile Dropdown Menu */
+        .profile-dropdown-menu {
+            position: absolute;
+            top: calc(100% + 10px);
+            right: 0;
+            width: 220px;
+            background: #FFFFFF !important;
+            border: 1px solid #E2E8F0 !important;
+            border-radius: 16px !important;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05) !important;
+            display: none;
+            flex-direction: column;
+            z-index: 100;
+            padding: 0.5rem !important;
+            transform: scale(0.95);
+            opacity: 0;
+            transform-origin: top right;
+            transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1), transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .profile-dropdown-menu.show {
+            display: flex !important;
+            opacity: 1 !important;
+            transform: scale(1) !important;
+        }
+
+        .dropdown-header {
+            padding: 0.75rem 1rem !important;
+            text-align: left !important;
+        }
+
+        .dropdown-user-name {
+            font-weight: 700 !important;
+            color: #1E293B !important;
+            font-size: 0.95rem !important;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .dropdown-user-email {
+            font-size: 0.8rem !important;
+            color: #64748B !important;
+            margin-top: 0.15rem !important;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background: #E2E8F0 !important;
+            margin: 0.5rem 0 !important;
+        }
+
+        .dropdown-item {
+            display: flex !important;
+            align-items: center !important;
+            gap: 0.75rem !important;
+            padding: 0.75rem 1rem !important;
+            color: #475569 !important;
+            font-weight: 500 !important;
+            font-size: 0.9rem !important;
+            border-radius: 10px !important;
+            transition: var(--transition) !important;
+            text-decoration: none !important;
+            background: none !important;
+            border: none !important;
+            width: 100% !important;
+            box-shadow: none !important;
+        }
+
+        .dropdown-item i {
+            font-size: 1rem !important;
+            color: #64748B !important;
+            transition: var(--transition) !important;
+        }
+
+        .dropdown-item:hover {
+            background: #F8FAFC !important;
+            color: #243A5E !important;
+        }
+
+        .dropdown-item:hover i {
+            color: #243A5E !important;
+        }
+
+        .dropdown-item.logout-btn {
+            color: #EF4444 !important;
+        }
+
+        .dropdown-item.logout-btn i {
+            color: #EF4444 !important;
+        }
+
+        .dropdown-item.logout-btn:hover {
+            background: #FEF2F2 !important;
+            color: #EF4444 !important;
+        }
+    </style>
+    @endif
     @stack('styles')
 </head>
 <body>
@@ -541,21 +1198,17 @@ tbody tr:hover {
             </div>
             
             @if(request()->is('admin*'))
-                <!-- Admin Navigation -->
                 <a href="{{ route('admin.dashboard') }}" class="nav-item {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
                     <i class="fas fa-home"></i> Dashboard
                 </a>
-                <a href="{{ route('admin.soal.index') }}" class="nav-item {{ request()->routeIs('admin.soal.*') ? 'active' : '' }}">
-                    <i class="fas fa-file-alt"></i> Kelola Soal
+                <a href="{{ route('admin.tryout.index') }}" class="nav-item {{ request()->routeIs('admin.tryout.*') || request()->routeIs('admin.soal.*') ? 'active' : '' }}">
+                    <i class="fas fa-clock"></i> Tryout & Soal
                 </a>
-                <a href="{{ route('admin.kategori-bank-soal.index') }}" class="nav-item {{ request()->routeIs('admin.kategori-bank-soal.*') || request()->routeIs('admin.bank-soal.*') ? 'active' : '' }}">
+                <a href="{{ route('admin.bank-soal.index') }}" class="nav-item {{ request()->routeIs('admin.bank-soal.*') || request()->routeIs('admin.kategori-bank-soal.*') ? 'active' : '' }}">
                     <i class="fas fa-database"></i> Bank Soal
                 </a>
                 <a href="{{ route('admin.paket.index') }}" class="nav-item {{ request()->routeIs('admin.paket.*') ? 'active' : '' }}">
                     <i class="fas fa-box"></i> Kelola Paket
-                </a>
-                <a href="{{ route('admin.tryout.index') }}" class="nav-item {{ request()->routeIs('admin.tryout.*') ? 'active' : '' }}">
-                    <i class="fas fa-clock"></i> Kelola Tryout
                 </a>
                 <a href="{{ route('admin.kelola_user') }}" class="nav-item {{ request()->routeIs('admin.kelola_user') ? 'active' : '' }}">
                     <i class="fas fa-users"></i> Kelola User
@@ -610,11 +1263,34 @@ tbody tr:hover {
                     <input type="text" placeholder="Cari..." style="border: none; background: transparent; outline: none; font-size: 0.95rem;">
                 </div>
                 <div style="flex:1"></div>
-                <div class="user-profile">
-                    <span>{{ request()->is('admin/*') ? 'Admin RAZAKA' : 'User' }}</span>
-                    <div style="width: 36px; height: 36px; border-radius: 50%; background: var(--primary-gradient); display: flex; align-items: center; justify-content: center; color: white;">
-                        <i class="fas fa-user"></i>
+                <div class="user-profile-wrapper" style="position: relative; display: flex; align-items: center; gap: 0.5rem;">
+                    <div class="user-profile" onclick="toggleProfileDropdown(event)" style="display: flex; align-items: center; gap: 1rem; padding: 0.5rem 1rem; background: var(--bg); border-radius: 50px; border: 1px solid var(--border); cursor: pointer; transition: var(--transition);">
+                        <span style="font-weight: 600; font-size: 0.95rem;">{{ request()->is('admin*') ? 'Admin RAZAKA' : Auth::user()->name }}</span>
+                        <div style="width: 36px; height: 36px; border-radius: 50%; background: var(--primary-gradient); display: flex; align-items: center; justify-content: center; color: white;">
+                            <i class="fas fa-user"></i>
+                        </div>
                     </div>
+                    
+                    @if(!request()->is('admin*'))
+                    <!-- Premium Profile Dropdown Menu -->
+                    <div id="user-profile-dropdown" class="profile-dropdown-menu">
+                        <div class="dropdown-header">
+                            <div class="dropdown-user-name">{{ Auth::user()->name }}</div>
+                            <div class="dropdown-user-email">{{ Auth::user()->email }}</div>
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <a href="{{ route('user.profile') }}" class="dropdown-item">
+                            <i class="fas fa-user-cog"></i> Edit Profil
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <form action="{{ route('logout') }}" method="POST" id="dropdown-logout-form" data-confirm="Yakin ingin logout?" data-type="warning" data-title="Logout" style="margin: 0;">
+                            @csrf
+                            <button type="submit" class="dropdown-item logout-btn" style="width: 100%; border: none; background: none; text-align: left; cursor: pointer; display: flex; align-items: center; gap: 0.75rem;">
+                                <i class="fas fa-sign-out-alt"></i> Keluar
+                            </button>
+                        </form>
+                    </div>
+                    @endif
                 </div>
             </header>
 
@@ -643,6 +1319,14 @@ tbody tr:hover {
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('sidebar-overlay');
+            
+            @if(!request()->is('admin*'))
+            if (window.innerWidth > 1024) {
+                document.body.classList.toggle('sidebar-collapsed');
+                return;
+            }
+            @endif
+
             sidebar.classList.toggle('show');
             if (sidebar.classList.contains('show')) {
                 overlay.style.display = 'block';
@@ -650,6 +1334,34 @@ tbody tr:hover {
                 overlay.style.display = 'none';
             }
         }
+
+        function toggleProfileDropdown(event) {
+            event.stopPropagation();
+            const dropdown = document.getElementById('user-profile-dropdown');
+            if (!dropdown) return;
+            
+            if (dropdown.classList.contains('show')) {
+                dropdown.classList.remove('show');
+                setTimeout(() => { dropdown.style.display = 'none'; }, 200);
+            } else {
+                dropdown.style.display = 'flex';
+                // Trigger reflow for transition
+                void dropdown.offsetWidth;
+                dropdown.classList.add('show');
+            }
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const dropdown = document.getElementById('user-profile-dropdown');
+            if (dropdown && dropdown.classList.contains('show')) {
+                const isClickInside = dropdown.contains(event.target);
+                if (!isClickInside) {
+                    dropdown.classList.remove('show');
+                    setTimeout(() => { dropdown.style.display = 'none'; }, 200);
+                }
+            }
+        });
 
         window.showModernAlert = function(type, title, message, onConfirm = null) {
             const modal = document.getElementById('modern-alert-modal');
@@ -761,6 +1473,13 @@ tbody tr:hover {
         });
     });
     </script>
+    @if(Auth::check() && !request()->is('admin*'))
+        @if(config('midtrans.is_production'))
+            <script type="text/javascript" src="https://app.midtrans.com/snap/snap.js" data-client-key="{{ config('midtrans.client_key') }}"></script>
+        @else
+            <script type="text/javascript" src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ config('midtrans.client_key') }}"></script>
+        @endif
+    @endif
     @stack('scripts')
 </body>
 </html>

@@ -59,8 +59,10 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->name('admin.')->grou
     
     Route::resource('paket', PackageController::class);
     Route::resource('tryout', TryoutController::class);
+    Route::get('soal/export-pdf/{tryout_id}', [QuestionController::class, 'exportPdf'])->name('soal.export_pdf');
     Route::resource('soal', QuestionController::class);
     
+    Route::post('bank-soal/import-pdf', [\App\Http\Controllers\Admin\BankSoalController::class, 'importPdf'])->name('bank-soal.import_pdf');
     Route::resource('kategori-bank-soal', \App\Http\Controllers\Admin\KategoriBankSoalController::class);
     Route::resource('bank-soal', \App\Http\Controllers\Admin\BankSoalController::class);
     Route::post('tryout/generate', [TryoutController::class, 'generate'])->name('tryout.generate');
@@ -70,4 +72,40 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->name('admin.')->grou
     Route::get('transaksi', [App\Http\Controllers\AdminController::class, 'transaksi'])->name('transaksi');
     Route::get('profile', [App\Http\Controllers\AdminController::class, 'profile'])->name('profile');
     Route::post('profile', [App\Http\Controllers\AdminController::class, 'updateProfile'])->name('profile.update');
+});
+
+// Webhook Midtrans (No auth, CSRF excluded in bootstrap/app.php)
+Route::post('midtrans-notification', [\App\Http\Controllers\User\MidtransController::class, 'handleNotification'])
+    ->name('midtrans.notification');
+
+// Tautan Bantuan Lokal: Selesaikan Semua Transaksi Pending Instan di Localhost
+Route::get('debug-settle-all', function() {
+    $transactions = \App\Models\Transaction::where('status', 'pending')->get();
+    $count = 0;
+    foreach ($transactions as $t) {
+        $t->update(['status' => 'success']);
+        
+        $package = $t->package;
+        if ($package) {
+            foreach ($package->tryouts as $tryout) {
+                $exists = \App\Models\TryoutAttempt::where('user_id', $t->user_id)
+                    ->where('tryout_id', $tryout->id)
+                    ->where('transaction_id', $t->id)
+                    ->exists();
+
+                if (!$exists) {
+                    \App\Models\TryoutAttempt::create([
+                        'user_id' => $t->user_id,
+                        'tryout_id' => $tryout->id,
+                        'transaction_id' => $t->id,
+                        'status' => 'available',
+                        'attempt_count' => 0,
+                        'max_attempt' => $tryout->batas_pengerjaan ?? 1
+                    ]);
+                }
+            }
+        }
+        $count++;
+    }
+    return "Berhasil mengaktifkan {$count} transaksi pending secara lokal! Silakan cek kembali halaman tryout/transaksi.";
 });

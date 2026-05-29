@@ -9,6 +9,27 @@
     <button onclick="document.getElementById('modal-tambah-kategori').style.display='flex'; setTimeout(()=>document.getElementById('modal-tambah-kategori').style.opacity='1', 10);" class="btn btn-primary" style="background: white; color: var(--primary);"><i class="fas fa-plus"></i> Tambah Kategori</button>
 </div>
 
+<div class="workspace-tabs" style="display: flex; gap: 1rem; margin-bottom: 2.5rem; border-bottom: 2px solid var(--border); padding-bottom: 0.75rem;">
+    <a href="{{ route('admin.kategori-bank-soal.index') }}" class="tab-item active-tab" style="font-size: 1.1rem; font-weight: 600; padding: 0.75rem 1.5rem; border-radius: 12px; transition: var(--transition); display: flex; align-items: center; gap: 0.5rem; text-decoration: none;">
+        <i class="fas fa-folder"></i> Kategori Bank Soal
+    </a>
+    <a href="{{ route('admin.bank-soal.index') }}" class="tab-item" style="font-size: 1.1rem; font-weight: 600; padding: 0.75rem 1.5rem; color: var(--text-muted); border-radius: 12px; transition: var(--transition); display: flex; align-items: center; gap: 0.5rem; text-decoration: none;">
+        <i class="fas fa-database"></i> Kumpulan Bank Soal
+    </a>
+</div>
+
+<style>
+.active-tab {
+    background: var(--primary-gradient) !important;
+    color: white !important;
+    box-shadow: var(--shadow-sm);
+}
+.tab-item:not(.active-tab):hover {
+    background: #E2E8F0;
+    color: var(--primary);
+}
+</style>
+
 <div class="stats-grid">
     @forelse($kategoris as $kategori)
     <div class="card" style="margin-bottom: 0; display:flex; flex-direction:column; padding: 1.5rem;">

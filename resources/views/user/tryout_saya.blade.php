@@ -36,7 +36,7 @@
             @if($isActive)
                 <span class="badge badge-success" style="font-size: 0.85rem;"><i class="fas fa-check"></i> Tersedia ({{ $sisa }}x lagi)</span>
             @else
-                <span class="badge" style="background: #FEE2E2; color: #EF4444; font-size: 0.85rem;"><i class="fas fa-times"></i> Tidak tersedia</span>
+                <span class="badge badge-danger" style="font-size: 0.85rem;"><i class="fas fa-times"></i> Tidak tersedia</span>
             @endif
         </div>
         
