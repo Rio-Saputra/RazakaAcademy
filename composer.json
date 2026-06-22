@@ -9,12 +9,12 @@
     ],
     "license": "MIT",
     "require": {
-        "php": "^8.3",
-        "barryvdh/laravel-dompdf": "*",
+        "php": "^8.2|^8.3",
+        "barryvdh/laravel-dompdf": "^3.1",
         "laravel/framework": "^11.0",
         "laravel/tinker": "^3.0",
         "midtrans/midtrans-php": "^2.6",
-        "smalot/pdfparser": "*"
+        "smalot/pdfparser": "^2.12"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
