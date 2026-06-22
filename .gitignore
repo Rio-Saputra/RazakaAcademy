@@ -14,7 +14,7 @@
 /.zed
 /auth.json
 /node_modules
-/public/build
+# /public/build (Di-comment agar hasil build frontend bisa di-push ke Git dan langsung terdeploy ke Hostinger)
 /public/hot
 /public/storage
 /storage/*.key
