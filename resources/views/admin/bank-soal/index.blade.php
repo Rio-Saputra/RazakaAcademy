@@ -17,15 +17,6 @@
     </div>
 </div>
 
-<!-- Tab Navigation Workspace -->
-<div class="workspace-tabs" style="display: flex; gap: 1rem; margin-bottom: 2.5rem; border-bottom: 2px solid var(--border); padding-bottom: 0.75rem;">
-    <a href="{{ route('admin.kategori-bank-soal.index') }}" class="tab-item" style="font-size: 1.1rem; font-weight: 600; padding: 0.75rem 1.5rem; color: var(--text-muted); border-radius: 12px; transition: var(--transition); display: flex; align-items: center; gap: 0.5rem; text-decoration: none;">
-        <i class="fas fa-folder"></i> Kategori Bank Soal
-    </a>
-    <a href="{{ route('admin.bank-soal.index') }}" class="tab-item active-tab" style="font-size: 1.1rem; font-weight: 600; padding: 0.75rem 1.5rem; border-radius: 12px; transition: var(--transition); display: flex; align-items: center; gap: 0.5rem; text-decoration: none;">
-        <i class="fas fa-database"></i> Kumpulan Bank Soal
-    </a>
-</div>
 
 <style>
 .active-tab {
@@ -175,14 +166,23 @@
 
 <!-- Active Filter Notice -->
 @if($kategori)
-<div style="background: rgba(36, 58, 94, 0.05); border-left: 4px solid var(--primary); padding: 1.25rem 1.5rem; border-radius: 0 12px 12px 0; margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center;">
+<div style="background: rgba(36, 58, 94, 0.05); border-left: 4px solid var(--primary); padding: 1.25rem 1.5rem; border-radius: 0 12px 12px 0; margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
     <div>
         <h4 style="font-size: 1.1rem; font-weight: 700; color: var(--primary);"><i class="fas fa-filter"></i> Saringan Kategori Aktif</h4>
         <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 0.15rem;">Menampilkan soal-soal Bank Soal dalam Kategori: <strong>{{ $kategori->nama_kategori }}</strong>.</p>
     </div>
-    <a href="{{ route('admin.bank-soal.index') }}" style="color: #EF4444; font-weight: 600; font-size: 0.95rem; text-decoration: none; display: flex; align-items: center; gap: 0.25rem;">
-        <i class="fas fa-times-circle"></i> Bersihkan Saringan
-    </a>
+    <div style="display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;">
+        <form action="{{ route('admin.bank-soal.destroy_all') }}" method="POST" style="display: inline;" data-confirm="Apakah Anda yakin ingin menghapus SEMUA soal dalam kategori {{ $kategori->nama_kategori }}? Tindakan ini bersifat permanen dan tidak dapat dibatalkan!" data-type="confirm" data-title="Konfirmasi Hapus Semua Soal">
+            @csrf
+            <input type="hidden" name="kategori_id" value="{{ $kategori->id }}">
+            <button type="submit" class="btn" style="background: rgba(239, 68, 68, 0.1); color: #EF4444; border: 1.5px solid rgba(239, 68, 68, 0.4); border-radius: 12px; padding: 0.6rem 1.25rem; font-weight: 600; cursor: pointer; transition: var(--transition); display: flex; align-items: center; gap: 0.5rem;">
+                <i class="fas fa-trash-alt"></i> Hapus Semua Soal
+            </button>
+        </form>
+        <a href="{{ route('admin.bank-soal.index') }}" style="color: #475569; font-weight: 600; font-size: 0.95rem; text-decoration: none; display: flex; align-items: center; gap: 0.25rem;">
+            <i class="fas fa-times-circle"></i> Bersihkan Saringan
+        </a>
+    </div>
 </div>
 @endif
 
@@ -243,7 +243,16 @@
                         </div>
                     </td>
                     <td style="padding: 1.5rem 1rem; text-align: center; vertical-align: middle;">
-                        <span class="badge-answer-benar">{{ strtoupper($soal->jawaban_benar) }}</span>
+                        <span class="badge-category" style="background:#243A5E; color:white; padding:0.25rem 0.5rem; border-radius:5px; font-weight:700; font-size:0.75rem; display:block; margin-bottom:0.5rem;">
+                            {{ $soal->jenis_soal ?? 'TWK' }}
+                        </span>
+                        @if(($soal->jenis_soal ?? 'TWK') === 'TKP')
+                            <span class="badge-answer-benar" style="background:#FEF3C7; color:#92400E; font-size:0.75rem; padding:0.25rem 0.5rem; display:block; white-space:nowrap;">
+                                A={{ $soal->option_points['A'] ?? 5 }}, B={{ $soal->option_points['B'] ?? 4 }}, C={{ $soal->option_points['C'] ?? 3 }}, D={{ $soal->option_points['D'] ?? 2 }}, E={{ $soal->option_points['E'] ?? 1 }}
+                            </span>
+                        @else
+                            <span class="badge-answer-benar">{{ strtoupper($soal->jawaban_benar) }}</span>
+                        @endif
                     </td>
                     <td style="padding: 1.5rem 1rem; text-align: right; vertical-align: middle;">
                         <div style="display: flex; gap: 0.5rem; justify-content: flex-end; align-items: center;">

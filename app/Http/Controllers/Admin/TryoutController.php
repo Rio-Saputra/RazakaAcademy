@@ -46,16 +46,14 @@ class TryoutController extends Controller
     {
         $request->validate([
             'tryout_id' => 'required|exists:tryouts,id',
-            'jumlah_soal' => 'required|integer|min:1',
+            'kategori_id' => 'required|exists:kategori_bank_soals,id',
         ]);
 
         $query = \App\Models\BankSoal::query();
         
-        if ($request->filled('kategori_id')) {
-            $query->where('kategori_id', $request->kategori_id);
-        }
+        $query->where('kategori_id', $request->kategori_id);
 
-        $bankSoals = $query->inRandomOrder()->limit($request->jumlah_soal)->get();
+        $bankSoals = $query->inRandomOrder()->get();
 
         if ($bankSoals->isEmpty()) {
             return redirect()->back()->with('error', 'Tidak ada soal di Bank Soal untuk kategori tersebut.');
@@ -73,7 +71,9 @@ class TryoutController extends Controller
                 'option_c' => $soal->opsi_c,
                 'option_d' => $soal->opsi_d,
                 'option_e' => $soal->opsi_e,
-                'correct_answer' => strtoupper($soal->jawaban_benar)
+                'correct_answer' => strtoupper($soal->jawaban_benar),
+                'jenis_soal' => $soal->jenis_soal ?? 'TWK',
+                'option_points' => $soal->option_points,
             ]);
             $inserted++;
         }

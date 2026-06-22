@@ -529,6 +529,33 @@ tbody tr:hover {
         padding: 1.5rem;
     }
 }
+
+/* Premium Logout Button Styling */
+.logout-btn-premium {
+    width: 100%;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.95rem 1.25rem;
+    border-radius: 16px;
+    font-size: 0.98rem;
+    font-weight: 600;
+    color: #F87171 !important;
+    background: rgba(239, 68, 68, 0.08) !important;
+    border: 1.5px dashed rgba(239, 68, 68, 0.2) !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.logout-btn-premium:hover {
+    background: #EF4444 !important;
+    color: white !important;
+    border-color: #EF4444 !important;
+    box-shadow: 0 10px 20px rgba(239, 68, 68, 0.2) !important;
+    transform: translateY(-2px);
+}
 </style>
     @if(!request()->is('admin*'))
     <style>
@@ -647,7 +674,7 @@ tbody tr:hover {
             box-shadow: var(--shadow-hover);
         }
 
-        .card h1, .card h2, .card h3, .card h4, .card h5, .card h6, .card p, .card span, .card label, .card strong, .card td {
+        .card h1, .card h2, .card h3, .card h4, .card h5, .card h6, .card p, .card span:not(.badge), .card label, .card strong, .card td {
             color: #FFFFFF !important;
         }
 
@@ -1086,6 +1113,44 @@ tbody tr:hover {
             background: #38BDF8 !important;
         }
 
+        /* Premium Notifications Dropdown Menu */
+        .notifications-dropdown-menu {
+            position: absolute;
+            top: calc(100% + 10px);
+            right: 0;
+            width: 320px;
+            background: #FFFFFF !important;
+            border: 1px solid #E2E8F0 !important;
+            border-radius: 16px !important;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05) !important;
+            display: none;
+            flex-direction: column;
+            z-index: 100;
+            padding: 0 !important;
+            transform: scale(0.95);
+            opacity: 0;
+            transform-origin: top right;
+            transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1), transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .notifications-dropdown-menu.show {
+            display: flex !important;
+            opacity: 1 !important;
+            transform: scale(1) !important;
+        }
+
+        .notification-item {
+            border-bottom: 1px solid #F1F5F9;
+        }
+
+        .notification-item.unread {
+            background-color: #F8FAFC !important;
+        }
+
+        .notification-item:hover {
+            background-color: #F1F5F9 !important;
+        }
+
         /* Premium Profile Dropdown Menu */
         .profile-dropdown-menu {
             position: absolute;
@@ -1185,6 +1250,26 @@ tbody tr:hover {
             background: #FEF2F2 !important;
             color: #EF4444 !important;
         }
+
+        /* Student specific notification dropdown style (Inverted Navy/Glassmorphic) */
+        .notifications-dropdown-menu {
+            background: rgba(30, 41, 59, 0.98) !important;
+            backdrop-filter: blur(12px) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            box-shadow: 0 20px 40px rgba(15, 23, 42, 0.5) !important;
+        }
+
+        .notification-item {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+        }
+
+        .notification-item.unread {
+            background-color: rgba(56, 189, 248, 0.08) !important;
+        }
+
+        .notification-item:hover {
+            background-color: rgba(255, 255, 255, 0.05) !important;
+        }
     </style>
     @endif
     @stack('styles')
@@ -1201,14 +1286,14 @@ tbody tr:hover {
                 <a href="{{ route('admin.dashboard') }}" class="nav-item {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
                     <i class="fas fa-home"></i> Dashboard
                 </a>
-                <a href="{{ route('admin.tryout.index') }}" class="nav-item {{ request()->routeIs('admin.tryout.*') || request()->routeIs('admin.soal.*') ? 'active' : '' }}">
-                    <i class="fas fa-clock"></i> Tryout & Soal
-                </a>
                 <a href="{{ route('admin.bank-soal.index') }}" class="nav-item {{ request()->routeIs('admin.bank-soal.*') || request()->routeIs('admin.kategori-bank-soal.*') ? 'active' : '' }}">
                     <i class="fas fa-database"></i> Bank Soal
                 </a>
                 <a href="{{ route('admin.paket.index') }}" class="nav-item {{ request()->routeIs('admin.paket.*') ? 'active' : '' }}">
                     <i class="fas fa-box"></i> Kelola Paket
+                </a>
+                <a href="{{ route('admin.tryout.index') }}" class="nav-item {{ request()->routeIs('admin.tryout.*') || request()->routeIs('admin.soal.*') ? 'active' : '' }}">
+                    <i class="fas fa-clock"></i> Tryout & Soal
                 </a>
                 <a href="{{ route('admin.kelola_user') }}" class="nav-item {{ request()->routeIs('admin.kelola_user') ? 'active' : '' }}">
                     <i class="fas fa-users"></i> Kelola User
@@ -1241,9 +1326,9 @@ tbody tr:hover {
                 </a>
             @endif
             
-            <form action="{{ route('logout') }}" method="POST" style="margin-top: auto;" data-confirm="Yakin ingin logout?" data-type="warning" data-title="Logout">
+            <form action="{{ route('logout') }}" method="POST" style="margin-top: auto; padding: 0 0.5rem;" data-confirm="Yakin ingin keluar?" data-type="warning" data-title="Keluar">
                 @csrf
-                <button type="submit" class="nav-item" style="width:100%; border:none; background:none; cursor:pointer; text-align:left; color: #EF4444;">
+                <button type="submit" class="logout-btn-premium">
                     <i class="fas fa-sign-out-alt"></i> Keluar
                 </button>
             </form>
@@ -1263,6 +1348,62 @@ tbody tr:hover {
                     <input type="text" placeholder="Cari..." style="border: none; background: transparent; outline: none; font-size: 0.95rem;">
                 </div>
                 <div style="flex:1"></div>
+
+                @if(Auth::check() && !request()->is('admin*'))
+                @php
+                    $unreadNotificationsCount = Auth::user()->unreadNotificationsCount();
+                    $notifications = Auth::user()->notifications()->take(5)->get();
+                @endphp
+                <div class="notifications-wrapper" style="position: relative; margin-right: 0.5rem; display: flex; align-items: center;">
+                    <button class="notification-bell" onclick="toggleNotificationsDropdown(event)" style="background: var(--bg); border: 1px solid var(--border); border-radius: 50%; width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: var(--transition); color: #1E293B; position: relative; outline: none; padding: 0;">
+                        <i class="fas fa-bell"></i>
+                        @if($unreadNotificationsCount > 0)
+                            <span class="notification-badge" id="notification-badge-el" style="position: absolute; top: -2px; right: -2px; background: #EF4444; color: white; font-size: 0.65rem; font-weight: 700; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; border: 2px solid #FFFFFF;">
+                                {{ $unreadNotificationsCount }}
+                            </span>
+                        @endif
+                    </button>
+                    <!-- Notification Dropdown Menu -->
+                    <div id="notifications-dropdown" class="notifications-dropdown-menu">
+                        <div class="dropdown-header" style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.25rem;">
+                            <span style="font-weight: 700; font-size: 0.95rem; color: white;">Notifikasi</span>
+                            @if($unreadNotificationsCount > 0)
+                                <button onclick="markAllNotificationsAsRead(event)" style="background: none; border: none; color: #38BDF8; font-size: 0.75rem; font-weight: 600; cursor: pointer; padding: 0; transition: var(--transition); text-decoration: none;">Tandai Semua Dibaca</button>
+                            @endif
+                        </div>
+                        <div class="dropdown-divider" style="margin: 0;"></div>
+                        <div class="notifications-list" style="max-height: 280px; overflow-y: auto;">
+                            @if($notifications->isEmpty())
+                                <div style="padding: 2rem 1.25rem; text-align: center; color: #94A3B8;">
+                                    <i class="far fa-bell" style="font-size: 1.5rem; margin-bottom: 0.5rem; display: block; color: #94A3B8; opacity: 0.5;"></i>
+                                    <span style="font-size: 0.85rem;">Tidak ada notifikasi baru</span>
+                                </div>
+                            @else
+                                @foreach($notifications as $notif)
+                                    <div class="notification-item {{ $notif->is_read ? 'read' : 'unread' }}" onclick="markNotificationAsRead(event, {{ $notif->id }})" style="padding: 0.9rem 1.25rem; cursor: pointer; transition: var(--transition); display: flex; gap: 0.75rem; align-items: flex-start; position: relative;">
+                                        <div style="margin-top: 0.2rem; font-size: 0.95rem;">
+                                            @if(str_contains(strtolower($notif->title), 'kadaluwarsa'))
+                                                <i class="fas fa-exclamation-circle" style="color: #EF4444;"></i>
+                                            @else
+                                                <i class="fas fa-bell" style="color: #F59E0B;"></i>
+                                            @endif
+                                        </div>
+                                        <div style="flex: 1; min-width: 0; text-align: left;">
+                                            <div style="font-weight: 700; font-size: 0.85rem; color: white; margin-bottom: 0.15rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ $notif->title }}</div>
+                                            <div style="font-size: 0.78rem; color: #CBD5E1; line-height: 1.4; margin-bottom: 0.35rem;">{{ $notif->message }}</div>
+                                            <div style="font-size: 0.7rem; color: #94A3B8;">{{ $notif->created_at->diffForHumans() }}</div>
+                                        </div>
+                                        @if(!$notif->is_read)
+                                            <span class="unread-dot" style="width: 6px; height: 6px; border-radius: 50%; background: #EF4444; position: absolute; top: 1.1rem; right: 0.8rem;"></span>
+                                        @endif
+                                    </div>
+                                @endforeach
+                            @endif
+                        </div>
+                    </div>
+                </div>
+                @endif
+
                 <div class="user-profile-wrapper" style="position: relative; display: flex; align-items: center; gap: 0.5rem;">
                     <div class="user-profile" onclick="toggleProfileDropdown(event)" style="display: flex; align-items: center; gap: 1rem; padding: 0.5rem 1rem; background: var(--bg); border-radius: 50px; border: 1px solid var(--border); cursor: pointer; transition: var(--transition);">
                         <span style="font-weight: 600; font-size: 0.95rem;">{{ request()->is('admin*') ? 'Admin RAZAKA' : Auth::user()->name }}</span>
@@ -1283,7 +1424,7 @@ tbody tr:hover {
                             <i class="fas fa-user-cog"></i> Edit Profil
                         </a>
                         <div class="dropdown-divider"></div>
-                        <form action="{{ route('logout') }}" method="POST" id="dropdown-logout-form" data-confirm="Yakin ingin logout?" data-type="warning" data-title="Logout" style="margin: 0;">
+                        <form action="{{ route('logout') }}" method="POST" id="dropdown-logout-form" data-confirm="Yakin ingin keluar?" data-type="warning" data-title="Keluar" style="margin: 0;">
                             @csrf
                             <button type="submit" class="dropdown-item logout-btn" style="width: 100%; border: none; background: none; text-align: left; cursor: pointer; display: flex; align-items: center; gap: 0.75rem;">
                                 <i class="fas fa-sign-out-alt"></i> Keluar
@@ -1339,6 +1480,13 @@ tbody tr:hover {
             event.stopPropagation();
             const dropdown = document.getElementById('user-profile-dropdown');
             if (!dropdown) return;
+
+            // Close notification dropdown if open
+            const notifDropdown = document.getElementById('notifications-dropdown');
+            if (notifDropdown && notifDropdown.classList.contains('show')) {
+                notifDropdown.classList.remove('show');
+                setTimeout(() => { notifDropdown.style.display = 'none'; }, 200);
+            }
             
             if (dropdown.classList.contains('show')) {
                 dropdown.classList.remove('show');
@@ -1351,6 +1499,97 @@ tbody tr:hover {
             }
         }
 
+        function toggleNotificationsDropdown(event) {
+            event.stopPropagation();
+            const dropdown = document.getElementById('notifications-dropdown');
+            if (!dropdown) return;
+            
+            // Close profile dropdown if open
+            const profileDropdown = document.getElementById('user-profile-dropdown');
+            if (profileDropdown && profileDropdown.classList.contains('show')) {
+                profileDropdown.classList.remove('show');
+                setTimeout(() => { profileDropdown.style.display = 'none'; }, 200);
+            }
+
+            if (dropdown.classList.contains('show')) {
+                dropdown.classList.remove('show');
+                setTimeout(() => { dropdown.style.display = 'none'; }, 200);
+            } else {
+                dropdown.style.display = 'flex';
+                void dropdown.offsetWidth;
+                dropdown.classList.add('show');
+            }
+        }
+
+        function markNotificationAsRead(event, id) {
+            event.stopPropagation();
+            const item = event.currentTarget;
+            if (item.classList.contains('read')) return;
+
+            fetch(`/user/notifications/${id}/read`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    item.classList.remove('unread');
+                    item.classList.add('read');
+                    const dot = item.querySelector('.unread-dot');
+                    if (dot) dot.remove();
+
+                    // Update badge count
+                    const badge = document.getElementById('notification-badge-el');
+                    if (badge) {
+                        let count = parseInt(badge.innerText.trim());
+                        count = count - 1;
+                        if (count <= 0) {
+                            badge.remove();
+                            // Also remove "Tandai Semua Dibaca" button if no unread
+                            const btnAll = document.querySelector('[onclick="markAllNotificationsAsRead(event)"]');
+                            if (btnAll) btnAll.remove();
+                        } else {
+                            badge.innerText = count;
+                        }
+                    }
+                }
+            });
+        }
+
+        function markAllNotificationsAsRead(event) {
+            event.stopPropagation();
+            fetch('/user/notifications/read-all', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Update all items in dropdown
+                    document.querySelectorAll('.notification-item.unread').forEach(item => {
+                        item.classList.remove('unread');
+                        item.classList.add('read');
+                        const dot = item.querySelector('.unread-dot');
+                        if (dot) dot.remove();
+                    });
+
+                    // Remove badge
+                    const badge = document.getElementById('notification-badge-el');
+                    if (badge) badge.remove();
+
+                    // Remove button
+                    const btnAll = event.currentTarget;
+                    if (btnAll) btnAll.remove();
+                }
+            });
+        }
+
         // Close dropdown when clicking outside
         document.addEventListener('click', function(event) {
             const dropdown = document.getElementById('user-profile-dropdown');
@@ -1359,6 +1598,16 @@ tbody tr:hover {
                 if (!isClickInside) {
                     dropdown.classList.remove('show');
                     setTimeout(() => { dropdown.style.display = 'none'; }, 200);
+                }
+            }
+
+            const notifDropdown = document.getElementById('notifications-dropdown');
+            if (notifDropdown && notifDropdown.classList.contains('show')) {
+                const isClickInside = notifDropdown.contains(event.target);
+                const isBellClick = event.target.closest('.notification-bell');
+                if (!isClickInside && !isBellClick) {
+                    notifDropdown.classList.remove('show');
+                    setTimeout(() => { notifDropdown.style.display = 'none'; }, 200);
                 }
             }
         });

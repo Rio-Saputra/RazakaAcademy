@@ -6,16 +6,22 @@ use Illuminate\Database\Eloquent\Model;
 
 class Question extends Model
 {
-  protected $fillable = [
-    'tryout_id',
-    'question_text',
-    'option_a',
-    'option_b',
-    'option_c',
-    'option_d',
-    'option_e',
-    'correct_answer'
-];
+    protected $fillable = [
+        'tryout_id',
+        'question_text',
+        'option_a',
+        'option_b',
+        'option_c',
+        'option_d',
+        'option_e',
+        'correct_answer',
+        'jenis_soal',
+        'option_points'
+    ];
+
+    protected $casts = [
+        'option_points' => 'array',
+    ];
 
     public function tryout()
     {

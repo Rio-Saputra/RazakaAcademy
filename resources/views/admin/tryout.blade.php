@@ -21,6 +21,40 @@
     </a>
 </div>
 
+<!-- Quick Statistics -->
+<div class="stats-grid-p" style="margin-bottom: 2rem;">
+    <!-- Total Tryout -->
+    <div class="stat-card-p">
+        <div class="stat-icon-wrapper-p color-blue">
+            <i class="fas fa-clock"></i>
+        </div>
+        <div class="stat-info-p">
+            <span class="stat-value-p">{{ $tryouts->count() }}</span>
+            <span class="stat-label-p">Total Tryout Aktif</span>
+        </div>
+    </div>
+    <!-- Total Soal Terdistribusi -->
+    <div class="stat-card-p">
+        <div class="stat-icon-wrapper-p color-emerald">
+            <i class="fas fa-file-alt"></i>
+        </div>
+        <div class="stat-info-p">
+            <span class="stat-value-p">{{ $tryouts->sum('questions_count') }}</span>
+            <span class="stat-label-p">Total Soal Terdistribusi</span>
+        </div>
+    </div>
+    <!-- Rata-rata Durasi -->
+    <div class="stat-card-p">
+        <div class="stat-icon-wrapper-p color-amber">
+            <i class="fas fa-history"></i>
+        </div>
+        <div class="stat-info-p">
+            <span class="stat-value-p">{{ count($tryouts) ? round($tryouts->avg('duration')) : 0 }} Menit</span>
+            <span class="stat-label-p">Rata-rata Durasi Ujian</span>
+        </div>
+    </div>
+</div>
+
 <style>
 .active-tab {
     background: var(--primary-gradient) !important;
@@ -30,6 +64,83 @@
 .tab-item:not(.active-tab):hover {
     background: #E2E8F0;
     color: var(--primary);
+}
+
+/* Statistics Cards */
+.stats-grid-p {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2.25rem;
+}
+
+.stat-card-p {
+    background: white;
+    border-radius: 16px;
+    padding: 1.5rem 1.75rem;
+    border: 1px solid #E2E8F0;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.006);
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    text-align: left;
+}
+
+.stat-card-p:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 20px -5px rgba(0, 0, 0, 0.08);
+    border-color: rgba(36, 58, 94, 0.15);
+}
+
+.stat-icon-wrapper-p {
+    width: 52px;
+    height: 52px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.35rem;
+    flex-shrink: 0;
+}
+
+.color-blue {
+    background: #EFF6FF;
+    color: #2563EB;
+}
+
+.color-emerald {
+    background: #ECFDF5;
+    color: #10B981;
+}
+
+.color-amber {
+    background: #FFFBEB;
+    color: #D97706;
+}
+
+.color-indigo {
+    background: #EEF2FF;
+    color: #4F46E5;
+}
+
+.stat-info-p {
+    display: flex;
+    flex-direction: column;
+}
+
+.stat-value-p {
+    font-size: 1.45rem;
+    font-weight: 700;
+    color: #1E293B;
+    line-height: 1.25;
+}
+
+.stat-label-p {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #64748B;
+    margin-top: 0.15rem;
 }
 </style>
 
@@ -179,22 +290,13 @@
                 <label class="form-label-p">Pilih Kategori Bank Soal</label>
                 <div class="input-icon-wrapper">
                     <i class="fas fa-filter input-icon-l"></i>
-                    <select name="kategori_id" class="form-control-p select-p">
-                        <option value="">Semua Kategori (Acak Keseluruhan)</option>
+                    <select name="kategori_id" class="form-control-p select-p" required>
+                        <option value="">-- Pilih Kategori --</option>
                         @foreach($kategoris as $k)
                             <option value="{{ $k->id }}">{{ $k->nama_kategori }}</option>
                         @endforeach
                     </select>
                 </div>
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label-p">Jumlah Soal yang Diambil</label>
-                <div class="input-icon-wrapper">
-                    <i class="fas fa-file-signature input-icon-l"></i>
-                    <input type="number" name="jumlah_soal" class="form-control-p" required min="1" value="20">
-                </div>
-                <small class="form-helper-text">Pastikan jumlah soal tersedia di Bank Soal mencukupi.</small>
             </div>
             
             <div class="modal-footer-actions">

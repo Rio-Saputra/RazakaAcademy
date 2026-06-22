@@ -8,41 +8,63 @@
 </div>
 
 <!-- Score Dashboard Panel -->
+<!-- Score Dashboard Panel -->
 <div class="hasil-score-row">
     <div class="card score-card-premium">
         <div class="glass-deco"></div>
         
-        <h3 class="score-card-header-text">Nilai Ujian Anda</h3>
+        <h3 class="score-card-header-text">Rincian Kelulusan SKD CPNS</h3>
         
         <!-- Score Display Ring -->
         <div class="score-ring-wrapper">
-            <div class="score-circle-inner" style="border-color: {{ $result->score >= 70 ? '#10B981' : ($result->score >= 50 ? '#F59E0B' : '#EF4444') }};">
-                <span class="score-number-text">{{ number_format($result->score, 1) }}</span>
-                <span class="score-max-text">Skala 100</span>
+            <div class="score-circle-inner" style="border-color: {{ $result->is_passed ? '#10B981' : '#EF4444' }}; width: 180px; height: 180px;">
+                <span class="score-number-text" style="font-size: 3.5rem;">{{ $result->score }}</span>
+                <span class="score-max-text">Skor Total SKD / 550</span>
             </div>
         </div>
         
         <!-- Qualification Pill -->
-        @php
-            $qual = 'Perlu Belajar';
-            $qualColor = '#EF4444';
-            $qualBg = 'rgba(239, 68, 68, 0.08)';
-            if ($result->score >= 80) {
-                $qual = 'Sangat Baik';
-                $qualColor = '#10B981';
-                $qualBg = 'rgba(16, 185, 129, 0.08)';
-            } elseif ($result->score >= 60) {
-                $qual = 'Cukup Baik';
-                $qualColor = '#F59E0B';
-                $qualBg = 'rgba(245, 158, 11, 0.08)';
-            }
-        @endphp
-        <div class="qualification-badge" style="color: {{ $qualColor }}; background: {{ $qualBg }}; border: 1px solid rgba(0,0,0,0.03);">
-            <i class="fas {{ $result->score >= 60 ? 'fa-award' : 'fa-graduation-cap' }}"></i> Predikat: {{ $qual }}
+        <div class="qualification-badge" style="color: {{ $result->is_passed ? '#34D399' : '#F87171' }} !important; background: {{ $result->is_passed ? 'rgba(16, 185, 129, 0.15)' : 'rgba(239, 68, 68, 0.15)' }} !important; border: 1px solid rgba(255, 255, 255, 0.12); display: inline-flex; align-items: center; gap: 0.5rem;">
+            <i class="fas {{ $result->is_passed ? 'fa-check-circle' : 'fa-times-circle' }}"></i>
+            Status: {{ $result->is_passed ? 'LULUS SKD (PASSING GRADE TERPENUHI)' : 'TIDAK LULUS SKD (PASSING GRADE TIDAK TERPENUHI)' }}
         </div>
         
+        <!-- Kategori Breakdown Grid -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.12); padding-top: 1.5rem;">
+            <!-- TWK Card -->
+            <div style="background: rgba(255,255,255,0.04); padding: 1rem 0.5rem; border-radius: 12px; border: 1px solid {{ $result->passed_twk ? 'rgba(16, 185, 129, 0.3)' : 'rgba(239, 68, 68, 0.3)' }}">
+                <span style="color: #CBD5E1; font-size: 0.8rem; font-weight: 700; display: block; text-transform: uppercase;">TWK (PG: 65)</span>
+                <span style="color: white; font-size: 1.5rem; font-weight: 800; display: block; margin: 0.25rem 0;">{{ $result->score_twk }}<span style="font-size: 0.9rem; font-weight: 500; color: #94A3B8;">/150</span></span>
+                <span class="badge" style="background: {{ $result->passed_twk ? '#DEF7EC' : '#FDE8E8' }}; color: {{ $result->passed_twk ? '#03543F' : '#9B1C1C' }} !important; font-size: 0.72rem; padding: 0.2rem 0.4rem; font-weight: 700; border-radius: 50px; display: inline-block;">
+                    {{ $result->passed_twk ? 'Lulus' : 'Gagal' }}
+                </span>
+            </div>
+            <!-- TIU Card -->
+            <div style="background: rgba(255,255,255,0.04); padding: 1rem 0.5rem; border-radius: 12px; border: 1px solid {{ $result->passed_tiu ? 'rgba(16, 185, 129, 0.3)' : 'rgba(239, 68, 68, 0.3)' }}">
+                <span style="color: #CBD5E1; font-size: 0.8rem; font-weight: 700; display: block; text-transform: uppercase;">TIU (PG: 80)</span>
+                <span style="color: white; font-size: 1.5rem; font-weight: 800; display: block; margin: 0.25rem 0;">{{ $result->score_tiu }}<span style="font-size: 0.9rem; font-weight: 500; color: #94A3B8;">/175</span></span>
+                <span class="badge" style="background: {{ $result->passed_tiu ? '#DEF7EC' : '#FDE8E8' }}; color: {{ $result->passed_tiu ? '#03543F' : '#9B1C1C' }} !important; font-size: 0.72rem; padding: 0.2rem 0.4rem; font-weight: 700; border-radius: 50px; display: inline-block;">
+                    {{ $result->passed_tiu ? 'Lulus' : 'Gagal' }}
+                </span>
+            </div>
+            <!-- TKP Card -->
+            <div style="background: rgba(255,255,255,0.04); padding: 1rem 0.5rem; border-radius: 12px; border: 1px solid {{ $result->passed_tkp ? 'rgba(16, 185, 129, 0.3)' : 'rgba(239, 68, 68, 0.3)' }}">
+                <span style="color: #CBD5E1; font-size: 0.8rem; font-weight: 700; display: block; text-transform: uppercase;">TKP (PG: 166)</span>
+                <span style="color: white; font-size: 1.5rem; font-weight: 800; display: block; margin: 0.25rem 0;">{{ $result->score_tkp }}<span style="font-size: 0.9rem; font-weight: 500; color: #94A3B8;">/225</span></span>
+                <span class="badge" style="background: {{ $result->passed_tkp ? '#DEF7EC' : '#FDE8E8' }}; color: {{ $result->passed_tkp ? '#03543F' : '#9B1C1C' }} !important; font-size: 0.72rem; padding: 0.2rem 0.4rem; font-weight: 700; border-radius: 50px; display: inline-block;">
+                    {{ $result->passed_tkp ? 'Lulus' : 'Gagal' }}
+                </span>
+            </div>
+        </div>
+
+        <!-- Info Penjelasan Nilai Maksimal -->
+        <div style="margin-top: 1.25rem; background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.2); padding: 0.75rem 1rem; border-radius: 12px; text-align: left; font-size: 0.85rem; color: #E2E8F0; line-height: 1.5;">
+            <i class="fas fa-info-circle" style="color: #38BDF8; margin-right: 6px;"></i>
+            <strong>Informasi Poin:</strong> Nilai maksimal teoritis TWK adalah 150 (30 soal), TIU 175 (35 soal), dan TKP 225 (45 soal). Jika jumlah soal yang disiapkan Admin kurang dari standar tersebut, nilai maksimal Anda disesuaikan dengan jumlah soal yang tersedia (contoh: 23 soal TWK memiliki nilai maksimal murni 115).
+        </div>
+
         <!-- Statistics Pastel Cards Grid -->
-        <div class="stats-grid-hasil">
+        <div class="stats-grid-hasil" style="margin-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.12); padding-top: 1.5rem;">
             <div class="stat-hasil-card correct">
                 <div class="stat-hasil-icon"><i class="fas fa-check"></i></div>
                 <div class="stat-hasil-val">{{ $correctCount }}</div>
@@ -75,20 +97,34 @@
         $userAns = $answers->has($q->id) ? $answers[$q->id]->user_answer : '-';
         if (empty($userAns)) $userAns = '-';
         $isCorrect = $answers->has($q->id) ? $answers[$q->id]->is_correct : false;
+        $jenis_soal = $q->jenis_soal ?? 'TWK';
     @endphp
     
-    <div class="card question-review-card {{ $isCorrect ? 'correct-border' : 'wrong-border' }}">
+    <div class="card question-review-card {{ ($jenis_soal === 'TKP' || $isCorrect) ? 'correct-border' : 'wrong-border' }}">
         <!-- Review Card Header -->
         <div class="review-card-header">
-            <div class="review-question-info">
+            <div class="review-question-info" style="display:flex; align-items:center;">
                 <div class="review-number-badge">
                     {{ $index + 1 }}
                 </div>
                 <span class="review-label-text">Pertanyaan {{ $index + 1 }}</span>
+                <span class="badge" style="background:#38BDF8; color:#1E293B; font-weight:700; font-size:0.75rem; border-radius:5px; margin-left:0.75rem; padding:0.2rem 0.5rem; border: none !important;">
+                    Kategori: {{ $jenis_soal }}
+                </span>
             </div>
-            <span class="badge {{ $isCorrect ? 'badge-correct-p' : 'badge-wrong-p' }}">
-                <i class="fas {{ $isCorrect ? 'fa-check-circle' : 'fa-times-circle' }}"></i> {{ $isCorrect ? 'BENAR' : 'SALAH' }}
-            </span>
+            
+            @if($jenis_soal === 'TKP')
+                @php
+                    $qScore = $answers->has($q->id) ? $answers[$q->id]->score : 0;
+                @endphp
+                <span class="badge" style="background: rgba(56, 189, 248, 0.15); color: #38BDF8; font-weight: 700; font-size: 0.8rem; padding: 0.4rem 1rem; border-radius: 50px; border: none !important;">
+                    <i class="fas fa-star" style="margin-right: 4px;"></i> Skor Didapat: {{ $qScore }} Poin
+                </span>
+            @else
+                <span class="badge {{ $isCorrect ? 'badge-correct-p' : 'badge-wrong-p' }}">
+                    <i class="fas {{ $isCorrect ? 'fa-check-circle' : 'fa-times-circle' }}"></i> {{ $isCorrect ? 'BENAR (+5)' : 'SALAH (+0)' }}
+                </span>
+            @endif
         </div>
         
         <!-- Question Text -->
@@ -112,17 +148,30 @@
                     $optionClass = 'option-review-card';
                     $iconClass = 'far fa-circle';
                     
-                    if ($q->correct_answer == $key) {
-                        $optionClass .= ' correct-choice';
-                        $iconClass = 'fas fa-check-circle';
-                    } elseif ($userAns == $key) {
-                        $optionClass .= ' wrong-choice';
-                        $iconClass = 'fas fa-times-circle';
+                    if ($jenis_soal === 'TKP') {
+                        $pts = $q->option_points[$key] ?? 0;
+                        if ($userAns == $key) {
+                            $optionClass .= ' correct-choice';
+                            $iconClass = 'fas fa-user-check';
+                        }
+                    } else {
+                        if ($q->correct_answer == $key) {
+                            $optionClass .= ' correct-choice';
+                            $iconClass = 'fas fa-check-circle';
+                        } elseif ($userAns == $key) {
+                            $optionClass .= ' wrong-choice';
+                            $iconClass = 'fas fa-times-circle';
+                        }
                     }
                 @endphp
                 <div class="{{ $optionClass }}">
                     <span class="option-key-badge">{{ $key }}.</span>
-                    <span class="option-val-text">{!! $val !!}</span>
+                    <span class="option-val-text">
+                        {!! $val !!}
+                        @if($jenis_soal === 'TKP')
+                            <span style="font-weight: 700; color: #38BDF8; font-size: 0.85rem; margin-left: 0.5rem;">({{ $q->option_points[$key] ?? 0 }} Poin)</span>
+                        @endif
+                    </span>
                     <i class="{{ $iconClass }} option-status-icon"></i>
                 </div>
             @endforeach
@@ -132,12 +181,21 @@
         <div class="review-footer-comparison">
             <div class="footer-comp-item user-selection">
                 <span class="comp-label">Jawaban Anda:</span>
-                <span class="comp-val {{ $isCorrect ? 'text-correct' : 'text-wrong' }}">
-                    <i class="fas {{ $isCorrect ? 'fa-user-check' : 'fa-user-times' }}"></i> {{ $userAns }}
-                </span>
+                @if($jenis_soal === 'TKP')
+                    @php
+                        $userScore = $answers->has($q->id) ? $answers[$q->id]->score : 0;
+                    @endphp
+                    <span class="comp-val" style="color: {{ $userScore >= 4 ? '#34D399' : ($userScore >= 2 ? '#FBBF24' : '#F87171') }};">
+                        <i class="fas fa-user-check"></i> {{ $userAns }} (Skor: {{ $userScore }})
+                    </span>
+                @else
+                    <span class="comp-val {{ $isCorrect ? 'text-correct' : 'text-wrong' }}">
+                        <i class="fas {{ $isCorrect ? 'fa-user-check' : 'fa-user-times' }}"></i> {{ $userAns }}
+                    </span>
+                @endif
             </div>
             <div class="footer-comp-item correct-key">
-                <span class="comp-label">Kunci Jawaban:</span>
+                <span class="comp-label">{{ $jenis_soal === 'TKP' ? 'Rekomendasi Utama (Skor 5):' : 'Kunci Jawaban:' }}</span>
                 <span class="comp-val text-correct">
                     <i class="fas fa-check-double"></i> {{ $q->correct_answer }}
                 </span>
@@ -272,8 +330,6 @@
         font-size: 0.95rem;
         font-weight: 700;
         margin-bottom: 2.5rem;
-        background: rgba(255, 255, 255, 0.08) !important;
-        color: #38BDF8 !important;
         border: 1px solid rgba(255, 255, 255, 0.12) !important;
     }
 

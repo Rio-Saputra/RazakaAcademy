@@ -96,7 +96,7 @@ class TransactionController extends Controller
 
     public function riwayat()
     {
-        $transactions = Auth::user()->transactions()->with('package')->orderBy('created_at', 'desc')->get();
+        $transactions = Auth::user()->transactions()->with('package')->orderBy('created_at', 'desc')->paginate(6);
         return view('user.riwayat', compact('transactions'));
     }
 }

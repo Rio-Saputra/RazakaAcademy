@@ -17,7 +17,13 @@ class BankSoal extends Model
         'opsi_d',
         'opsi_e',
         'jawaban_benar',
-        'kategori_id'
+        'kategori_id',
+        'jenis_soal',
+        'option_points'
+    ];
+
+    protected $casts = [
+        'option_points' => 'array',
     ];
 
     public function kategori()

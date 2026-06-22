@@ -50,17 +50,72 @@
     </form>
 </div>
 
+@if($tryout_id)
+<!-- Question Breakdown Stats -->
+<div class="stats-grid-p" style="margin-bottom: 2rem;">
+    <!-- Total Soal -->
+    <div class="stat-card-p">
+        <div class="stat-icon-wrapper-p color-blue">
+            <i class="fas fa-file-alt"></i>
+        </div>
+        <div class="stat-info-p">
+            <span class="stat-value-p">{{ $questions->count() }} / 110</span>
+            <span class="stat-label-p">Total Soal (Target: 110)</span>
+        </div>
+    </div>
+    <!-- Soal TWK -->
+    <div class="stat-card-p">
+        <div class="stat-icon-wrapper-p color-emerald">
+            <i class="fas fa-landmark"></i>
+        </div>
+        <div class="stat-info-p">
+            <span class="stat-value-p">{{ $questions->where('jenis_soal', 'TWK')->count() }} / 30</span>
+            <span class="stat-label-p">Soal TWK (Target: 30)</span>
+        </div>
+    </div>
+    <!-- Soal TIU -->
+    <div class="stat-card-p">
+        <div class="stat-icon-wrapper-p color-amber">
+            <i class="fas fa-brain"></i>
+        </div>
+        <div class="stat-info-p">
+            <span class="stat-value-p">{{ $questions->where('jenis_soal', 'TIU')->count() }} / 35</span>
+            <span class="stat-label-p">Soal TIU (Target: 35)</span>
+        </div>
+    </div>
+    <!-- Soal TKP -->
+    <div class="stat-card-p">
+        <div class="stat-icon-wrapper-p color-indigo">
+            <i class="fas fa-user-tie"></i>
+        </div>
+        <div class="stat-info-p">
+            <span class="stat-value-p">{{ $questions->where('jenis_soal', 'TKP')->count() }} / 45</span>
+            <span class="stat-label-p">Soal TKP (Target: 45)</span>
+        </div>
+    </div>
+</div>
+@endif
+
 <!-- Question List Workspace -->
 @if($tryout_id)
 <div class="soal-list-container">
     @forelse($questions as $index => $q)
     <div class="soal-card-premium">
         <!-- Card Header -->
-        <div class="soal-card-header">
+        <div class="soal-card-header" style="display:flex; justify-content:space-between; align-items:center;">
             <span class="badge-soal-num">Soal #{{ $loop->iteration }}</span>
-            <span class="badge-kunci-jawaban">
-                <i class="fas fa-check-circle"></i> Kunci Jawaban: {{ strtoupper($q->correct_answer) }}
+            <span class="badge-category-p" style="background:#243A5E; color:white; padding: 0.35rem 0.75rem; border-radius: 50px; font-weight: 700; font-size: 0.8rem; margin-right: auto; margin-left: 0.75rem;">
+                Kategori: {{ $q->jenis_soal ?? 'TWK' }}
             </span>
+            @if(($q->jenis_soal ?? 'TWK') === 'TKP')
+                <span class="badge-kunci-jawaban" style="background:#FEF3C7; color:#92400E;">
+                    <i class="fas fa-star"></i> Poin TKP: A={{ $q->option_points['A'] ?? 5 }}, B={{ $q->option_points['B'] ?? 4 }}, C={{ $q->option_points['C'] ?? 3 }}, D={{ $q->option_points['D'] ?? 2 }}, E={{ $q->option_points['E'] ?? 1 }}
+                </span>
+            @else
+                <span class="badge-kunci-jawaban">
+                    <i class="fas fa-check-circle"></i> Kunci Jawaban: {{ strtoupper($q->correct_answer) }}
+                </span>
+            @endif
         </div>
 
         <!-- Card Body -->
@@ -78,9 +133,14 @@
                     }
                 @endphp
                 @foreach($previewOptions as $key => $letter)
-                <div class="soal-option-item {{ strtoupper($q->correct_answer) === $letter ? 'correct-option' : '' }}">
+                <div class="soal-option-item {{ ($q->jenis_soal ?? 'TWK') !== 'TKP' && strtoupper($q->correct_answer) === $letter ? 'correct-option' : '' }}">
                     <div class="soal-option-letter">{{ $letter }}</div>
-                    <div class="soal-option-text">{!! $q->{'formatted_option_'.$key} !!}</div>
+                    <div class="soal-option-text">
+                        {!! $q->{'formatted_option_'.$key} !!}
+                        @if(($q->jenis_soal ?? 'TWK') === 'TKP')
+                            <span style="font-weight:700; color:#3B82F6; font-size:0.85rem; margin-left:0.5rem;">(Skor: {{ $q->option_points[strtoupper($key)] ?? 0 }} pt)</span>
+                        @endif
+                    </div>
                 </div>
                 @endforeach
             </div>
@@ -120,6 +180,83 @@
 @endif
 
 <style>
+    /* Statistics Cards */
+    .stats-grid-p {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2.25rem;
+    }
+
+    .stat-card-p {
+        background: white;
+        border-radius: 16px;
+        padding: 1.25rem 1.5rem;
+        border: 1px solid #E2E8F0;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.006);
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        text-align: left;
+    }
+
+    .stat-card-p:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 20px -5px rgba(0, 0, 0, 0.08);
+        border-color: rgba(36, 58, 94, 0.15);
+    }
+
+    .stat-icon-wrapper-p {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        flex-shrink: 0;
+    }
+
+    .color-blue {
+        background: #EFF6FF;
+        color: #2563EB;
+    }
+
+    .color-emerald {
+        background: #ECFDF5;
+        color: #10B981;
+    }
+
+    .color-amber {
+        background: #FFFBEB;
+        color: #D97706;
+    }
+
+    .color-indigo {
+        background: #EEF2FF;
+        color: #4F46E5;
+    }
+
+    .stat-info-p {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .stat-value-p {
+        font-size: 1.35rem;
+        font-weight: 700;
+        color: #1E293B;
+        line-height: 1.2;
+    }
+
+    .stat-label-p {
+        font-size: 0.8rem;
+        font-weight: 500;
+        color: #64748B;
+        margin-top: 0.15rem;
+    }
+
     /* Action Buttons Group & Premium Buttons */
     .admin-action-buttons-group {
         display: flex;

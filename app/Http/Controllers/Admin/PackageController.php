@@ -10,7 +10,7 @@ class PackageController extends Controller
 {
     public function index()
     {
-        $packages = Package::all();
+        $packages = Package::withCount('tryouts')->get();
         return view('admin.paket', compact('packages'));
     }
 

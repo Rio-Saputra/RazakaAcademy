@@ -51,6 +51,9 @@ Route::prefix('user')->middleware(['auth', 'role:user'])->name('user.')->group(f
     
     Route::get('profile', [UserController::class, 'profile'])->name('profile');
     Route::post('profile', [UserController::class, 'updateProfile'])->name('profile.update');
+
+    Route::post('notifications/{id}/read', [UserTryoutController::class, 'readNotification'])->name('notifications.read');
+    Route::post('notifications/read-all', [UserTryoutController::class, 'readAllNotifications'])->name('notifications.read_all');
 });
 
 // Admin Routes
@@ -63,11 +66,13 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->name('admin.')->grou
     Route::resource('soal', QuestionController::class);
     
     Route::post('bank-soal/import-pdf', [\App\Http\Controllers\Admin\BankSoalController::class, 'importPdf'])->name('bank-soal.import_pdf');
+    Route::post('bank-soal/destroy-all', [\App\Http\Controllers\Admin\BankSoalController::class, 'destroyAll'])->name('bank-soal.destroy_all');
     Route::resource('kategori-bank-soal', \App\Http\Controllers\Admin\KategoriBankSoalController::class);
     Route::resource('bank-soal', \App\Http\Controllers\Admin\BankSoalController::class);
     Route::post('tryout/generate', [TryoutController::class, 'generate'])->name('tryout.generate');
     
     Route::get('kelola_user', [App\Http\Controllers\AdminController::class, 'kelolaUser'])->name('kelola_user');
+    Route::post('kelola_user', [App\Http\Controllers\AdminController::class, 'storeUser'])->name('user.store');
     Route::delete('kelola_user/{id}', [App\Http\Controllers\AdminController::class, 'destroyUser'])->name('user.destroy');
     Route::get('transaksi', [App\Http\Controllers\AdminController::class, 'transaksi'])->name('transaksi');
     Route::get('profile', [App\Http\Controllers\AdminController::class, 'profile'])->name('profile');
@@ -108,4 +113,19 @@ Route::get('debug-settle-all', function() {
         $count++;
     }
     return "Berhasil mengaktifkan {$count} transaksi pending secara lokal! Silakan cek kembali halaman tryout/transaksi.";
+});
+
+// Tautan Bantuan Lokal: Kembalikan semua transaksi sukses ke status pending agar dapat diuji coba kembali
+Route::get('debug-unsettle-all', function() {
+    $transactions = \App\Models\Transaction::where('status', 'success')->get();
+    $count = 0;
+    foreach ($transactions as $t) {
+        $t->update(['status' => 'pending']);
+        // Delete any TryoutAttempt associated with this transaction
+        \App\Models\TryoutAttempt::where('user_id', $t->user_id)
+            ->where('transaction_id', $t->id)
+            ->delete();
+        $count++;
+    }
+    return "Berhasil mengembalikan {$count} transaksi sukses ke pending untuk pengujian ulang! Halaman tryout Anda kini dikunci kembali.";
 });

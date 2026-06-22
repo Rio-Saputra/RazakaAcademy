@@ -22,6 +22,10 @@ class RoleMiddleware
             return redirect('/user/dashboard');
         }
 
+        if (Auth::check() && Auth::user()->role === 'user') {
+            \App\Services\TryoutExpirationService::checkExpirationForUser(Auth::user());
+        }
+
         return $next($request);
     }
 }

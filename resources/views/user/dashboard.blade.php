@@ -22,7 +22,7 @@
                     </div>
                     <div class="greeting-divider"></div>
                     <div class="greeting-stat-item">
-                        <span class="greeting-stat-val">{{ number_format($rata_rata, 1) }}</span>
+                        <span class="greeting-stat-val">{{ number_format($rata_rata, 0) }}<span style="font-size:0.9rem; font-weight:normal; color:var(--text-muted);">/550</span></span>
                         <span class="greeting-stat-lbl">Rata-rata Nilai</span>
                     </div>
                 </div>
@@ -31,6 +31,33 @@
                 <i class="fas fa-graduation-cap"></i>
             </div>
         </div>
+
+        <!-- Grafik Perkembangan Nilai Tryout (Chart) -->
+        @if($total_tryout > 0)
+        <div class="card chart-card-premium" style="margin-bottom: 2rem; padding: 2rem; border-radius: 20px; background: rgba(36, 58, 94, 0.95) !important; border: 1px solid rgba(255, 255, 255, 0.12) !important;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 0.5rem;">
+                <div>
+                    <h4 style="margin: 0 0 0.25rem 0; font-size: 1.25rem; font-weight: 700; color: white;">
+                        <i class="fas fa-chart-line" style="color: #38BDF8; margin-right: 8px;"></i> Analisis Perkembangan Nilai
+                    </h4>
+                    <p style="margin: 0; font-size: 0.85rem; color: #CBD5E1;">Perkembangan total skor SKD dalam 7 tryout terakhir Anda</p>
+                </div>
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; color: #CBD5E1;">
+                        <span style="display: inline-block; width: 12px; height: 12px; background: #38BDF8; border-radius: 3px;"></span>
+                        Skor Anda
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; color: #CBD5E1;">
+                        <span style="display: inline-block; width: 12px; height: 12px; border-bottom: 2px dashed #EF4444;"></span>
+                        Target Lulus (311)
+                    </div>
+                </div>
+            </div>
+            <div style="position: relative; height: 280px; width: 100%;">
+                <canvas id="scoreHistoryChart"></canvas>
+            </div>
+        </div>
+        @endif
  
         <!-- Ubin Pintas Navigasi Minimalis (Quick-Navigation Tiles) -->
         <div class="quick-tiles-grid">
@@ -68,6 +95,60 @@
             </a>
         </div>
  
+        <!-- Section Progress & Analisis Paket Ujian -->
+        @if(!empty($package_stats))
+            <h3 class="section-title-min"><i class="fas fa-chart-pie" style="margin-right: 8px;"></i> Progress & Analisis Paket Ujian</h3>
+            <div class="package-stats-list" style="display: flex; flex-direction: column; gap: 1.5rem; margin-bottom: 2.5rem;">
+                @foreach($package_stats as $stat)
+                    @php
+                        $pkg = $stat['package'];
+                        $total = $stat['total_tryouts'];
+                        $comp = $stat['completed_count'];
+                        $percent = $total > 0 ? ($comp / $total) * 100 : 0;
+                    @endphp
+                    <div class="card package-stat-card">
+                        
+                        <!-- Top Info -->
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.5rem;">
+                            <div>
+                                <h4 style="margin: 0 0 0.25rem 0; font-size: 1.2rem; font-weight: 700; color: white;">{{ $pkg->name }}</h4>
+                                <span style="font-size: 0.85rem; color: #CBD5E1;">{{ $comp }} dari {{ $total }} Tryout diselesaikan</span>
+                            </div>
+                            <span class="badge" style="background: {{ $stat['is_passed'] ? '#DEF7EC' : '#FDE8E8' }}; color: {{ $stat['is_passed'] ? '#03543F' : '#9B1C1C' }} !important; font-weight: 700; font-size: 0.75rem; padding: 0.3rem 0.75rem; border-radius: 50px;">
+                                Rata-rata: {{ $stat['is_passed'] ? 'LULUS SKD' : 'TIDAK LULUS SKD' }}
+                            </span>
+                        </div>
+
+                        <!-- Progress Bar -->
+                        <div style="background: rgba(255, 255, 255, 0.1); border-radius: 50px; height: 10px; width: 100%; margin-bottom: 1.75rem; overflow: hidden;">
+                            <div style="background: var(--primary-gradient); height: 100%; width: {{ $percent }}%; border-radius: 50px; transition: width 0.5s ease;"></div>
+                        </div>
+
+                        <!-- Scores Breakdown Grid -->
+                        <div class="package-stat-scores-grid">
+                            <div class="package-stat-score-item" style="border: 1px solid rgba(255,255,255,0.08);">
+                                <span style="color: #CBD5E1; font-size: 0.72rem; font-weight: 600; display: block; text-transform: uppercase;">SKD Total</span>
+                                <span style="color: #38BDF8; font-size: 1.3rem; font-weight: 800; display: block; margin-top: 0.2rem;">{{ number_format($stat['avg_score'], 0) }}<span style="font-size: 0.8rem; font-weight: 500; color: #94A3B8;">/550</span></span>
+                            </div>
+                            <div class="package-stat-score-item" style="border: 1px solid {{ $stat['avg_twk'] >= 65 ? 'rgba(16, 185, 129, 0.2)' : 'rgba(239, 68, 68, 0.2)' }};">
+                                <span style="color: #CBD5E1; font-size: 0.72rem; font-weight: 600; display: block; text-transform: uppercase;">TWK (PG: 65)</span>
+                                <span style="color: white; font-size: 1.3rem; font-weight: 800; display: block; margin-top: 0.2rem;">{{ number_format($stat['avg_twk'], 0) }}<span style="font-size: 0.8rem; font-weight: 500; color: #94A3B8;">/150</span></span>
+                            </div>
+                            <div class="package-stat-score-item" style="border: 1px solid {{ $stat['avg_tiu'] >= 80 ? 'rgba(16, 185, 129, 0.2)' : 'rgba(239, 68, 68, 0.2)' }};">
+                                <span style="color: #CBD5E1; font-size: 0.72rem; font-weight: 600; display: block; text-transform: uppercase;">TIU (PG: 80)</span>
+                                <span style="color: white; font-size: 1.3rem; font-weight: 800; display: block; margin-top: 0.2rem;">{{ number_format($stat['avg_tiu'], 0) }}<span style="font-size: 0.8rem; font-weight: 500; color: #94A3B8;">/175</span></span>
+                            </div>
+                            <div class="package-stat-score-item" style="border: 1px solid {{ $stat['avg_tkp'] >= 166 ? 'rgba(16, 185, 129, 0.2)' : 'rgba(239, 68, 68, 0.2)' }};">
+                                <span style="color: #CBD5E1; font-size: 0.72rem; font-weight: 600; display: block; text-transform: uppercase;">TKP (PG: 166)</span>
+                                <span style="color: white; font-size: 1.3rem; font-weight: 800; display: block; margin-top: 0.2rem;">{{ number_format($stat['avg_tkp'], 0) }}<span style="font-size: 0.8rem; font-weight: 500; color: #94A3B8;">/225</span></span>
+                            </div>
+                        </div>
+
+                    </div>
+                @endforeach
+            </div>
+        @endif
+
         <!-- Section Rekomendasi Paket Ujian -->
         <h3 class="section-title-min">Rekomendasi Paket Ujian</h3>
         <div class="recommended-packages-grid">
@@ -169,14 +250,17 @@
             
             <div class="activities-list">
                 @forelse($recent_results as $res)
-                    <div class="activity-item-card">
+                    <div class="activity-item-card" style="border-left: 4px solid {{ $res->is_passed ? '#10B981' : '#EF4444' }} !important;">
                         <div class="activity-meta">
                             <span class="activity-date">{{ $res->created_at->locale('id')->diffForHumans() }}</span>
-                            <span class="activity-score-badge {{ $res->score >= 70 ? 'badge-high' : 'badge-mid' }}">
-                                Skor: {{ number_format($res->score, 0) }}
+                            <span class="activity-score-badge" style="background: {{ $res->is_passed ? '#DEF7EC' : '#FDE8E8' }} !important; color: {{ $res->is_passed ? '#03543F' : '#9B1C1C' }} !important; font-weight:700;">
+                                {{ $res->is_passed ? 'LULUS SKD' : 'TIDAK LULUS' }} ({{ $res->score }})
                             </span>
                         </div>
                         <h5 class="activity-tryout-name">{{ $res->tryout->title ?? 'Ujian' }}</h5>
+                        <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.75rem;">
+                            TWK: {{ $res->score_twk }} | TIU: {{ $res->score_tiu }} | TKP: {{ $res->score_tkp }}
+                        </div>
                         <div class="activity-footer">
                             <a href="{{ route('user.tryout.hasil', $res->id) }}" class="activity-link-btn">
                                 Lihat Review <i class="fas fa-arrow-right"></i>
@@ -638,7 +722,40 @@
     font-size: 0.85rem;
     margin-bottom: 1rem;
 }
- 
+
+.package-stat-card {
+    padding: 2rem !important;
+    border-radius: 20px !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    background: rgba(36, 58, 94, 0.95) !important;
+    color: white;
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--shadow-md) !important;
+}
+
+.package-stat-scores-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 1rem;
+    text-align: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 1.25rem;
+}
+
+.package-stat-score-item {
+    background: rgba(255, 255, 255, 0.03);
+    padding: 0.75rem 0.5rem;
+    border-radius: 12px;
+}
+
+@media (max-width: 576px) {
+    .package-stat-scores-grid {
+        grid-template-columns: 1fr 1fr !important;
+        gap: 0.75rem !important;
+    }
+}
+
 /* RESPONSIVE LAYOUT OVERRIDES */
 @media (max-width: 992px) {
     .dashboard-grid-layout {
@@ -657,7 +774,10 @@
     }
 }
 </style>
+@endpush
 
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     document.querySelectorAll('.midtrans-buy-form .btn-buy-package').forEach(button => {
         button.addEventListener('click', function(e) {
@@ -721,5 +841,123 @@
             });
         });
     });
+
+    // Chart.js Score History Logic
+    @if($total_tryout > 0)
+    document.addEventListener('DOMContentLoaded', function() {
+        const ctx = document.getElementById('scoreHistoryChart').getContext('2d');
+        
+        // Data from backend
+        const labels = @json($chart_labels);
+        const scores = @json($chart_scores);
+        
+        // Target passing score
+        const targetScore = 311;
+        const targetData = Array(scores.length).fill(targetScore);
+        
+        // Create Gradient fill
+        const gradient = ctx.createLinearGradient(0, 0, 0, 280);
+        gradient.addColorStop(0, 'rgba(56, 189, 248, 0.25)');
+        gradient.addColorStop(1, 'rgba(56, 189, 248, 0.0)');
+
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Skor Anda',
+                        data: scores,
+                        borderColor: '#38BDF8',
+                        borderWidth: 3,
+                        backgroundColor: gradient,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#0ea5e9',
+                        pointBorderColor: '#38BDF8',
+                        pointBorderWidth: 2,
+                        pointRadius: 5,
+                        pointHoverRadius: 7,
+                        pointHoverBackgroundColor: '#38BDF8',
+                        pointHoverBorderColor: '#ffffff',
+                        pointHoverBorderWidth: 2,
+                    },
+                    {
+                        label: 'Target Lulus SKD',
+                        data: targetData,
+                        borderColor: '#EF4444',
+                        borderWidth: 2,
+                        borderDash: [6, 6],
+                        fill: false,
+                        pointRadius: 0,
+                        pointHoverRadius: 0,
+                        tension: 0
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false // We use our custom legend in HTML for cleaner aesthetic
+                    },
+                    tooltip: {
+                        backgroundColor: '#1E2F4D',
+                        titleColor: '#ffffff',
+                        bodyColor: '#CBD5E1',
+                        borderColor: 'rgba(255, 255, 255, 0.08)',
+                        borderWidth: 1,
+                        padding: 10,
+                        displayColors: true,
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed.y !== null) {
+                                    label += context.parsed.y;
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        min: 0,
+                        max: 550,
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.06)',
+                            drawBorder: false
+                        },
+                        ticks: {
+                            color: '#94A3B8',
+                            font: {
+                                size: 10,
+                                family: 'Poppins'
+                            },
+                            stepSize: 100
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false,
+                            drawBorder: false
+                        },
+                        ticks: {
+                            color: '#94A3B8',
+                            font: {
+                                size: 10,
+                                family: 'Poppins'
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    });
+    @endif
 </script>
 @endpush

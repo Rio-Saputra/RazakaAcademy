@@ -10,8 +10,7 @@ class KategoriBankSoalController extends Controller
 {
     public function index()
     {
-        $kategoris = KategoriBankSoal::withCount('bank_soals')->get();
-        return view('admin.kategori-bank-soal.index', compact('kategoris'));
+        return redirect()->route('admin.bank-soal.index');
     }
 
     public function store(Request $request)

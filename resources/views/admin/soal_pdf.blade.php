@@ -148,7 +148,7 @@
         <ol class="instructions-list">
             <li>Bacalah doa sebelum memulai mengerjakan soal ujian.</li>
             <li>Periksa kembali kelengkapan soal dan baca pertanyaan dengan teliti sebelum menjawab.</li>
-            <li>Pilihlah satu jawaban yang paling tepat dari pilihan A, B, C, atau D yang tersedia.</li>
+            <li>Pilihlah satu jawaban yang paling tepat dari pilihan A, B, C, D, atau E yang tersedia.</li>
             <li>Dilarang bekerja sama, menyontek, atau menggunakan alat bantu lain selama ujian berlangsung.</li>
         </ol>
     </div>
@@ -159,26 +159,32 @@
         <div class="question-block">
             <div class="question-header">
                 <span class="question-num">{{ $index + 1 }}.</span>
-                <div class="question-text">{!! $q->question_text !!}</div>
+                <div class="question-text">{!! $q->clean_question_text_formatted !!}</div>
             </div>
             
             <div class="options-list">
                 <div class="option-item">
                     <span class="option-letter">A.</span>
-                    <span class="option-text">{{ $q->option_a }}</span>
+                    <span class="option-text">{!! $q->formatted_option_a !!}</span>
                 </div>
                 <div class="option-item">
                     <span class="option-letter">B.</span>
-                    <span class="option-text">{{ $q->option_b }}</span>
+                    <span class="option-text">{!! $q->formatted_option_b !!}</span>
                 </div>
                 <div class="option-item">
                     <span class="option-letter">C.</span>
-                    <span class="option-text">{{ $q->option_c }}</span>
+                    <span class="option-text">{!! $q->formatted_option_c !!}</span>
                 </div>
                 <div class="option-item">
                     <span class="option-letter">D.</span>
-                    <span class="option-text">{{ $q->option_d }}</span>
+                    <span class="option-text">{!! $q->formatted_option_d !!}</span>
                 </div>
+                @if(!empty($q->option_e))
+                <div class="option-item">
+                    <span class="option-letter">E.</span>
+                    <span class="option-text">{!! $q->formatted_option_e !!}</span>
+                </div>
+                @endif
             </div>
         </div>
         @endforeach

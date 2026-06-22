@@ -2,6 +2,17 @@
 
 @section('content')
 
+@php
+    $questionText = '';
+    $questionImg = null;
+    if ($question) {
+        $questionText = preg_replace('/<img[^>]+>/i', '', $question->question_text);
+        if (preg_match('/<img[^>]+src="([^"]+)"/i', $question->question_text, $m)) {
+            $questionImg = $m[1];
+        }
+    }
+@endphp
+
 <!-- Premium Header -->
 <div class="admin-page-header">
     <div>
@@ -17,7 +28,7 @@
     </a>
 </div>
 
-<form action="{{ $question ? route('admin.soal.update', $question->id) : route('admin.soal.store') }}" method="POST">
+<form action="{{ $question ? route('admin.soal.update', $question->id) : route('admin.soal.store') }}" method="POST" enctype="multipart/form-data">
 @csrf
 
 @if($question)
@@ -38,28 +49,63 @@
         </div>
 
         <div class="form-group">
+            <label class="form-label-p">Kategori SKD CPNS</label>
+            <select name="jenis_soal" id="jenis_soal_edit" class="form-control-p" onchange="toggleJenisSoalEdit()">
+                <option value="TWK" {{ $question->jenis_soal === 'TWK' ? 'selected' : '' }}>TWK (Tes Wawasan Kebangsaan)</option>
+                <option value="TIU" {{ $question->jenis_soal === 'TIU' ? 'selected' : '' }}>TIU (Tes Intelegensi Umum)</option>
+                <option value="TKP" {{ $question->jenis_soal === 'TKP' ? 'selected' : '' }}>TKP (Tes Karakteristik Pribadi)</option>
+            </select>
+        </div>
+
+        <div class="form-group">
             <label class="form-label-p">Teks Soal</label>
-            <textarea name="question_text" class="form-control-p" placeholder="Masukkan teks pertanyaan..." required style="height: 140px;">{{ $question->question_text }}</textarea>
+            <textarea name="question_text" class="form-control-p" placeholder="Masukkan teks pertanyaan..." style="height: 140px;">{{ $questionText }}</textarea>
+            @if($questionImg)
+                <div style="margin-top: 0.75rem; padding: 0.5rem; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px; max-width: fit-content;">
+                    <p style="margin: 0 0 0.5rem 0; font-size: 0.85rem; font-weight: 600; color: #475569;">Gambar Saat Ini:</p>
+                    <img src="{{ $questionImg }}" style="max-height: 180px; max-width: 100%; border-radius: 4px; display: block; margin-bottom: 0.5rem;">
+                    <label style="display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.8rem; color: #EF4444; cursor: pointer; margin: 0;">
+                        <input type="checkbox" name="hapus_gambar_pertanyaan" value="1"> Hapus gambar ini
+                    </label>
+                </div>
+            @endif
+            <input type="file" name="gambar_pertanyaan" accept="image/*" class="form-control-p" style="font-size: 0.8rem; padding: 0.25rem 0.5rem; height: auto; margin-top: 0.5rem;">
         </div>
 
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; margin-top:1.5rem;">
             @foreach(['a','b','c','d','e'] as $opt)
+            @php
+                $optText = preg_replace('/<img[^>]+>/i', '', $question['option_'.$opt]);
+                $optImg = null;
+                if ($question['option_'.$opt] && preg_match('/<img[^>]+src="([^"]+)"/i', $question['option_'.$opt], $m)) {
+                    $optImg = $m[1];
+                }
+            @endphp
             <div class="form-group">
                 <label class="form-label-p">Pilihan {{ strtoupper($opt) }} {!! $opt === 'e' ? '<span class="text-muted" style="font-weight:normal; font-size:0.85rem;">(Opsional)</span>' : '' !!}</label>
-                <div class="option-input-wrapper">
+                <div class="option-input-wrapper" style="margin-bottom: 0.25rem;">
                     <input type="text" 
                         name="option_{{ $opt }}" 
-                        value="{{ $question['option_'.$opt] }}"
+                        value="{{ $optText }}"
                         class="form-control-p form-control-p-option" 
-                        placeholder="Masukkan pilihan jawaban {{ strtoupper($opt) }}..."
-                        {{ $opt !== 'e' ? 'required' : '' }}>
+                        placeholder="Masukkan pilihan jawaban {{ strtoupper($opt) }}...">
                     <div class="option-input-badge">{{ strtoupper($opt) }}</div>
                 </div>
+                @if($optImg)
+                    <div style="margin: 0.5rem 0; padding: 0.25rem; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 6px; display: inline-block;">
+                        <img src="{{ $optImg }}" style="max-height: 80px; display: block; border-radius: 4px; margin-bottom: 0.25rem;">
+                        <label style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; color: #EF4444; cursor: pointer; margin: 0;">
+                            <input type="checkbox" name="hapus_gambar_option_{{ $opt }}" value="1"> Hapus gambar
+                        </label>
+                    </div>
+                @endif
+                <input type="file" name="gambar_option_{{ $opt }}" accept="image/*" class="form-control-p" style="font-size: 0.8rem; padding: 0.25rem 0.5rem; height: auto;">
             </div>
             @endforeach
         </div>
 
-        <div class="correct-answer-section">
+        <!-- Section Kunci Jawaban (TWK/TIU) -->
+        <div class="correct-answer-section" id="correct_answer_section_edit" style="{{ $question->jenis_soal === 'TKP' ? 'display:none;' : '' }}">
             <span class="correct-answer-label">
                 <i class="fas fa-check-circle" style="color: #10B981; font-size: 1.25rem;"></i> Kunci Jawaban Benar
             </span>
@@ -70,6 +116,21 @@
                     </option>
                 @endforeach
             </select>
+        </div>
+
+        <!-- Section Bobot Poin TKP (TKP) -->
+        <div class="correct-answer-section" id="tkp_points_section_edit" style="{{ $question->jenis_soal === 'TKP' ? '' : 'display:none;' }}">
+            <span class="correct-answer-label">
+                <i class="fas fa-star" style="color: #F59E0B; font-size: 1.25rem;"></i> Bobot Nilai Poin TKP (1 s.d. 5)
+            </span>
+            <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+                @foreach(['A','B','C','D','E'] as $opt)
+                <div style="display: flex; align-items: center; gap: 0.25rem; background: white; padding: 0.5rem 0.75rem; border-radius: 8px; border: 1px solid var(--border);">
+                    <span style="font-weight: 700; font-size: 0.9rem;">{{ $opt }}:</span>
+                    <input type="number" name="option_points_{{ strtolower($opt) }}" min="1" max="5" value="{{ $question->option_points ? ($question->option_points[$opt] ?? '') : ($opt === 'A' ? 5 : ($opt === 'B' ? 4 : ($opt === 'C' ? 3 : ($opt === 'D' ? 2 : 1)))) }}" style="width: 50px; border: 1px solid #CBD5E1; border-radius: 4px; padding: 2px 4px; font-weight: bold; text-align: center;">
+                </div>
+                @endforeach
+            </div>
         </div>
 
     </div>
@@ -85,23 +146,35 @@
         </div>
 
         <div class="form-group">
+            <label class="form-label-p">Kategori SKD CPNS</label>
+            <select name="questions[0][jenis_soal]" id="jenis_soal_0" class="form-control-p" onchange="toggleJenisSoal(0)">
+                <option value="TWK">TWK (Tes Wawasan Kebangsaan)</option>
+                <option value="TIU">TIU (Tes Intelegensi Umum)</option>
+                <option value="TKP">TKP (Tes Karakteristik Pribadi)</option>
+            </select>
+        </div>
+
+        <div class="form-group">
             <label class="form-label-p">Teks Soal</label>
-            <textarea name="questions[0][question_text]" class="form-control-p" placeholder="Masukkan teks pertanyaan..." required style="height: 140px;"></textarea>
+            <textarea name="questions[0][question_text]" class="form-control-p" placeholder="Masukkan teks pertanyaan..." style="height: 140px;"></textarea>
+            <input type="file" name="questions[0][gambar_pertanyaan]" accept="image/*" class="form-control-p" style="font-size: 0.8rem; padding: 0.25rem 0.5rem; height: auto; margin-top: 0.5rem;">
         </div>
 
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; margin-top:1.5rem;">
             @foreach(['a' => 'A', 'b' => 'B', 'c' => 'C', 'd' => 'D', 'e' => 'E'] as $key => $letter)
             <div class="form-group">
                 <label class="form-label-p">Pilihan {{ $letter }} {!! $letter === 'E' ? '<span class="text-muted" style="font-weight:normal; font-size:0.85rem;">(Opsional)</span>' : '' !!}</label>
-                <div class="option-input-wrapper">
-                    <input type="text" name="questions[0][option_{{ $key }}]" class="form-control-p form-control-p-option" placeholder="Masukkan pilihan jawaban {{ $letter }}..." {{ $letter !== 'E' ? 'required' : '' }}>
+                <div class="option-input-wrapper" style="margin-bottom: 0.25rem;">
+                    <input type="text" name="questions[0][option_{{ $key }}]" class="form-control-p form-control-p-option" placeholder="Masukkan pilihan jawaban {{ $letter }}...">
                     <div class="option-input-badge">{{ $letter }}</div>
                 </div>
+                <input type="file" name="questions[0][gambar_option_{{ $key }}]" accept="image/*" class="form-control-p" style="font-size: 0.8rem; padding: 0.25rem 0.5rem; height: auto;">
             </div>
             @endforeach
         </div>
 
-        <div class="correct-answer-section">
+        <!-- Section Kunci Jawaban (TWK/TIU) -->
+        <div class="correct-answer-section" id="correct_answer_section_0">
             <span class="correct-answer-label">
                 <i class="fas fa-check-circle" style="color: #10B981; font-size: 1.25rem;"></i> Kunci Jawaban Benar
             </span>
@@ -112,6 +185,21 @@
                 <option value="D">Pilihan D</option>
                 <option value="E">Pilihan E</option>
             </select>
+        </div>
+
+        <!-- Section Bobot Poin TKP (TKP) -->
+        <div class="correct-answer-section" id="tkp_points_section_0" style="display: none;">
+            <span class="correct-answer-label">
+                <i class="fas fa-star" style="color: #F59E0B; font-size: 1.25rem;"></i> Bobot Nilai Poin TKP (1 s.d. 5)
+            </span>
+            <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+                @foreach(['A','B','C','D','E'] as $opt)
+                <div style="display: flex; align-items: center; gap: 0.25rem; background: white; padding: 0.5rem 0.75rem; border-radius: 8px; border: 1px solid var(--border);">
+                    <span style="font-weight: 700; font-size: 0.9rem;">{{ $opt }}:</span>
+                    <input type="number" name="questions[0][option_points_{{ strtolower($opt) }}]" min="1" max="5" value="{{ $opt === 'A' ? 5 : ($opt === 'B' ? 4 : ($opt === 'C' ? 3 : ($opt === 'D' ? 2 : 1))) }}" style="width: 50px; border: 1px solid #CBD5E1; border-radius: 4px; padding: 2px 4px; font-weight: bold; text-align: center;">
+                </div>
+                @endforeach
+            </div>
         </div>
     </div>
 
@@ -442,6 +530,34 @@
 
 
 @push('scripts')
+<script>
+function toggleJenisSoal(idx) {
+    const val = document.getElementById(`jenis_soal_${idx}`).value;
+    const correctSection = document.getElementById(`correct_answer_section_${idx}`);
+    const tkpSection = document.getElementById(`tkp_points_section_${idx}`);
+    if (val === 'TKP') {
+        correctSection.style.display = 'none';
+        tkpSection.style.display = 'block';
+    } else {
+        correctSection.style.display = 'block';
+        tkpSection.style.display = 'none';
+    }
+}
+
+function toggleJenisSoalEdit() {
+    const val = document.getElementById('jenis_soal_edit').value;
+    const correctSection = document.getElementById('correct_answer_section_edit');
+    const tkpSection = document.getElementById('tkp_points_section_edit');
+    if (val === 'TKP') {
+        correctSection.style.display = 'none';
+        tkpSection.style.display = 'block';
+    } else {
+        correctSection.style.display = 'block';
+        tkpSection.style.display = 'none';
+    }
+}
+</script>
+
 @if(!$question)
 <script>
 let index = 1;
@@ -462,55 +578,71 @@ function addQuestion() {
         </div>
 
         <div class="form-group">
+            <label class="form-label-p">Kategori SKD CPNS</label>
+            <select name="questions[${index}][jenis_soal]" id="jenis_soal_${index}" class="form-control-p" onchange="toggleJenisSoal(${index})">
+                <option value="TWK">TWK (Tes Wawasan Kebangsaan)</option>
+                <option value="TIU">TIU (Tes Intelegensi Umum)</option>
+                <option value="TKP">TKP (Tes Karakteristik Pribadi)</option>
+            </select>
+        </div>
+
+        <div class="form-group">
             <label class="form-label-p">Teks Soal</label>
-            <textarea name="questions[${index}][question_text]" class="form-control-p" placeholder="Masukkan teks pertanyaan..." required style="height: 140px;"></textarea>
+            <textarea name="questions[${index}][question_text]" class="form-control-p" placeholder="Masukkan teks pertanyaan..." style="height: 140px;"></textarea>
+            <input type="file" name="questions[${index}][gambar_pertanyaan]" accept="image/*" class="form-control-p" style="font-size: 0.8rem; padding: 0.25rem 0.5rem; height: auto; margin-top: 0.5rem;">
         </div>
 
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; margin-top:1.5rem;">
             
             <div class="form-group">
                 <label class="form-label-p">Pilihan A</label>
-                <div class="option-input-wrapper">
-                    <input type="text" name="questions[${index}][option_a]" class="form-control-p form-control-p-option" placeholder="Masukkan pilihan jawaban A..." required>
+                <div class="option-input-wrapper" style="margin-bottom: 0.25rem;">
+                    <input type="text" name="questions[${index}][option_a]" class="form-control-p form-control-p-option" placeholder="Masukkan pilihan jawaban A...">
                     <div class="option-input-badge">A</div>
                 </div>
+                <input type="file" name="questions[${index}][gambar_option_a]" accept="image/*" class="form-control-p" style="font-size: 0.8rem; padding: 0.25rem 0.5rem; height: auto;">
             </div>
 
             <div class="form-group">
                 <label class="form-label-p">Pilihan B</label>
-                <div class="option-input-wrapper">
-                    <input type="text" name="questions[${index}][option_b]" class="form-control-p form-control-p-option" placeholder="Masukkan pilihan jawaban B..." required>
+                <div class="option-input-wrapper" style="margin-bottom: 0.25rem;">
+                    <input type="text" name="questions[${index}][option_b]" class="form-control-p form-control-p-option" placeholder="Masukkan pilihan jawaban B...">
                     <div class="option-input-badge">B</div>
                 </div>
+                <input type="file" name="questions[${index}][gambar_option_b]" accept="image/*" class="form-control-p" style="font-size: 0.8rem; padding: 0.25rem 0.5rem; height: auto;">
             </div>
 
             <div class="form-group">
                 <label class="form-label-p">Pilihan C</label>
-                <div class="option-input-wrapper">
-                    <input type="text" name="questions[${index}][option_c]" class="form-control-p form-control-p-option" placeholder="Masukkan pilihan jawaban C..." required>
+                <div class="option-input-wrapper" style="margin-bottom: 0.25rem;">
+                    <input type="text" name="questions[${index}][option_c]" class="form-control-p form-control-p-option" placeholder="Masukkan pilihan jawaban C...">
                     <div class="option-input-badge">C</div>
                 </div>
+                <input type="file" name="questions[${index}][gambar_option_c]" accept="image/*" class="form-control-p" style="font-size: 0.8rem; padding: 0.25rem 0.5rem; height: auto;">
             </div>
 
             <div class="form-group">
                 <label class="form-label-p">Pilihan D</label>
-                <div class="option-input-wrapper">
-                    <input type="text" name="questions[${index}][option_d]" class="form-control-p form-control-p-option" placeholder="Masukkan pilihan jawaban D..." required>
+                <div class="option-input-wrapper" style="margin-bottom: 0.25rem;">
+                    <input type="text" name="questions[${index}][option_d]" class="form-control-p form-control-p-option" placeholder="Masukkan pilihan jawaban D...">
                     <div class="option-input-badge">D</div>
                 </div>
+                <input type="file" name="questions[${index}][gambar_option_d]" accept="image/*" class="form-control-p" style="font-size: 0.8rem; padding: 0.25rem 0.5rem; height: auto;">
             </div>
 
             <div class="form-group">
                 <label class="form-label-p">Pilihan E <span class="text-muted" style="font-weight:normal; font-size:0.85rem;">(Opsional)</span></label>
-                <div class="option-input-wrapper">
+                <div class="option-input-wrapper" style="margin-bottom: 0.25rem;">
                     <input type="text" name="questions[${index}][option_e]" class="form-control-p form-control-p-option" placeholder="Masukkan pilihan jawaban E...">
                     <div class="option-input-badge">E</div>
                 </div>
+                <input type="file" name="questions[${index}][gambar_option_e]" accept="image/*" class="form-control-p" style="font-size: 0.8rem; padding: 0.25rem 0.5rem; height: auto;">
             </div>
 
         </div>
 
-        <div class="correct-answer-section">
+        <!-- Section Kunci Jawaban (TWK/TIU) -->
+        <div class="correct-answer-section" id="correct_answer_section_${index}">
             <span class="correct-answer-label">
                 <i class="fas fa-check-circle" style="color: #10B981; font-size: 1.25rem;"></i> Kunci Jawaban Benar
             </span>
@@ -521,6 +653,35 @@ function addQuestion() {
                 <option value="D">Pilihan D</option>
                 <option value="E">Pilihan E</option>
             </select>
+        </div>
+
+        <!-- Section Bobot Poin TKP (TKP) -->
+        <div class="correct-answer-section" id="tkp_points_section_${index}" style="display: none;">
+            <span class="correct-answer-label">
+                <i class="fas fa-star" style="color: #F59E0B; font-size: 1.25rem;"></i> Bobot Nilai Poin TKP (1 s.d. 5)
+            </span>
+            <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+                <div style="display: flex; align-items: center; gap: 0.25rem; background: white; padding: 0.5rem 0.75rem; border-radius: 8px; border: 1px solid var(--border);">
+                    <span style="font-weight: 700; font-size: 0.9rem;">A:</span>
+                    <input type="number" name="questions[${index}][option_points_a]" min="1" max="5" value="5" style="width: 50px; border: 1px solid #CBD5E1; border-radius: 4px; padding: 2px 4px; font-weight: bold; text-align: center;">
+                </div>
+                <div style="display: flex; align-items: center; gap: 0.25rem; background: white; padding: 0.5rem 0.75rem; border-radius: 8px; border: 1px solid var(--border);">
+                    <span style="font-weight: 700; font-size: 0.9rem;">B:</span>
+                    <input type="number" name="questions[${index}][option_points_b]" min="1" max="5" value="4" style="width: 50px; border: 1px solid #CBD5E1; border-radius: 4px; padding: 2px 4px; font-weight: bold; text-align: center;">
+                </div>
+                <div style="display: flex; align-items: center; gap: 0.25rem; background: white; padding: 0.5rem 0.75rem; border-radius: 8px; border: 1px solid var(--border);">
+                    <span style="font-weight: 700; font-size: 0.9rem;">C:</span>
+                    <input type="number" name="questions[${index}][option_points_c]" min="1" max="5" value="3" style="width: 50px; border: 1px solid #CBD5E1; border-radius: 4px; padding: 2px 4px; font-weight: bold; text-align: center;">
+                </div>
+                <div style="display: flex; align-items: center; gap: 0.25rem; background: white; padding: 0.5rem 0.75rem; border-radius: 8px; border: 1px solid var(--border);">
+                    <span style="font-weight: 700; font-size: 0.9rem;">D:</span>
+                    <input type="number" name="questions[${index}][option_points_d]" min="1" max="5" value="2" style="width: 50px; border: 1px solid #CBD5E1; border-radius: 4px; padding: 2px 4px; font-weight: bold; text-align: center;">
+                </div>
+                <div style="display: flex; align-items: center; gap: 0.25rem; background: white; padding: 0.5rem 0.75rem; border-radius: 8px; border: 1px solid var(--border);">
+                    <span style="font-weight: 700; font-size: 0.9rem;">E:</span>
+                    <input type="number" name="questions[${index}][option_points_e]" min="1" max="5" value="1" style="width: 50px; border: 1px solid #CBD5E1; border-radius: 4px; padding: 2px 4px; font-weight: bold; text-align: center;">
+                </div>
+            </div>
         </div>
 
     </div>
